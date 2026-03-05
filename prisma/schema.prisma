@@ -73,3 +73,61 @@ model Verification {
   @@index([identifier])
   @@map("verification")
 }
+
+
+model Company {
+  id        String    @id @default(cuid())
+  name      String    // Contoh: PT Multi Visi Primakreasi
+  brandName String    // Contoh: mvpsupply.id
+  address   String    // Jl. Cikatomas II No. 18...
+  email     String
+  phone     String
+  bankName  String    // BCA
+  bankAccount String  // 001-669-6999
+  senderName  String  // Vici Herlambang
+  senderTitle String  // Co-Founder
+  invoices  Invoice[]
+}
+
+model Customer {
+  id       String    @id @default(cuid())
+  name     String    // Contoh: Utan Boutique Hotel
+  address  String    // Jl. Guru Gatot 45...
+  invoices Invoice[]
+}
+
+model Invoice {
+  id            String   @id @default(cuid())
+  invoiceNumber String   @unique // Contoh: INV-12345-1
+  issuedAt      DateTime @default(now())
+  dueDate       DateTime
+  
+  // Relations
+  companyId     String
+  company       Company  @relation(fields: [companyId], references: [id])
+  customerId    String
+  customer      Customer @relation(fields: [customerId], references: [id])
+  items         InvoiceItem[]
+
+  // Financials
+  subTotal      Decimal  @default(0)
+  discountRate  Float    @default(0) // 10% diwakili 0.1 atau 10
+  discountValue Decimal  @default(0)
+  totalAmount   Decimal  @default(0)
+  totalInWords  String   // Contoh: Empat Ratus Lima Puluh Ribu Rupiah
+  
+  status        String   @default("DRAFT") // DRAFT, SENT, PAID, CANCELLED
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model InvoiceItem {
+  id          String  @id @default(cuid())
+  productName String
+  price       Decimal @default(0)
+  quantity    Int     @default(1)
+  total       Decimal @default(0)
+
+  invoiceId   String
+  invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
