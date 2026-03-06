@@ -1,15 +1,14 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  async redirects() {
-    return [
+const config: NextConfig = {
+  images: {
+    remotePatterns: [
       {
-        source: "/",
-        destination: "/dashboard/catalog",
-        permanent: false,
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
       },
-    ];
+    ],
   },
 };
 
-export default nextConfig;
+export default config;

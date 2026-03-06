@@ -9,7 +9,6 @@ export const useCompany = () => {
   });
 };
 
-
 export const useCreateCompany = () => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
@@ -19,12 +18,15 @@ export const useCreateCompany = () => {
         body: JSON.stringify(newCompany),
       }),
     onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["company"] });
-      },
+      queryClient.invalidateQueries({ queryKey: ["company"] });
+    },
     onError: () => {
       console.error("Failed to create company");
-    }
+    },
   });
   return { createCompany: mutation.mutate };
-}
+};
 
+export const useUpdateCompany = () => {
+  
+}

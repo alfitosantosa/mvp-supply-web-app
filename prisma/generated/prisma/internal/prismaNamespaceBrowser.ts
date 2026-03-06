@@ -57,8 +57,9 @@ export const ModelName = {
   Verification: 'Verification',
   Company: 'Company',
   Customer: 'Customer',
-  Invoice: 'Invoice',
-  InvoiceItem: 'InvoiceItem'
+  invoice: 'invoice',
+  InvoiceItem: 'InvoiceItem',
+  Product: 'Product'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -88,7 +89,8 @@ export const UserScalarFieldEnum = {
   banExpires: 'banExpires',
   banReason: 'banReason',
   banned: 'banned',
-  role: 'role'
+  role: 'role',
+  isActice: 'isActice'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -150,7 +152,10 @@ export const CompanyScalarFieldEnum = {
   bankName: 'bankName',
   bankAccount: 'bankAccount',
   senderName: 'senderName',
-  senderTitle: 'senderTitle'
+  senderTitle: 'senderTitle',
+  imageUrl: 'imageUrl',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
@@ -159,7 +164,11 @@ export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeo
 export const CustomerScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  address: 'address'
+  address: 'address',
+  imageUrl: 'imageUrl',
+  phone: 'phone',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
@@ -187,14 +196,33 @@ export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeo
 
 export const InvoiceItemScalarFieldEnum = {
   id: 'id',
-  productName: 'productName',
+  invoiceId: 'invoiceId',
+  productId: 'productId',
+  imageUrl: 'imageUrl',
+  description: 'description',
   price: 'price',
   quantity: 'quantity',
   total: 'total',
-  invoiceId: 'invoiceId'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type InvoiceItemScalarFieldEnum = (typeof InvoiceItemScalarFieldEnum)[keyof typeof InvoiceItemScalarFieldEnum]
+
+
+export const ProductScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  price: 'price',
+  description: 'description',
+  imageUrl: 'imageUrl',
+  stock: 'stock',
+  total: 'total',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
 
 
 export const SortOrder = {

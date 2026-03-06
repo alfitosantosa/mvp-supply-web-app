@@ -1,9 +1,17 @@
 "use client";
 
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 import { Button } from "./ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "@/lib/auth-client";
+import Image from "next/image";
 
 export default function Navbar() {
   const router = useRouter();
@@ -39,7 +47,7 @@ export default function Navbar() {
   // Loading state
   if (isPending) {
     return (
-      <nav className="w-full bg-black text-white p-4">
+      <nav className=" bg-black text-white p-4">
         <div className="text-center">Loading...</div>
       </nav>
     );
@@ -48,11 +56,14 @@ export default function Navbar() {
   // Not logged in
   if (!session?.user) {
     return (
-      <nav className="w-full bg-black text-white p-4">
-        <div className="mx-auto flex items-center justify-between">
+      <nav className="h-full bg-black text-white p-4 ">
+        <div className="mx-auto max-w-7xl flex items-center justify-between">
           <div className="text-lg font-bold">MVP Supply</div>
 
-          <Button variant="outline" className="font-bold text-black bg-white hover:bg-gray-200">
+          <Button
+            variant="outline"
+            className="text-black bg-white hover:bg-gray-200"
+          >
             <a href="/auth/sign-in">Login</a>
           </Button>
         </div>
@@ -62,8 +73,8 @@ export default function Navbar() {
 
   // Logged in
   return (
-    <nav className="w-full h-full bg-black text-white p-4">
-      <div className="mx-auto flex items-center justify-between">
+    <nav className="h-full bg-black text-white p-4">
+      <div className="mx-auto max-w-7xl flex items-center justify-between">
         <div className="text-lg font-bold">MVP Supply</div>
 
         {/* Select Menu Navigation */}
@@ -90,12 +101,27 @@ export default function Navbar() {
         {/* User Menu / Logout Select */}
         <Select onValueChange={handleUserAction}>
           <SelectTrigger className="w-40 bg-black text-white border-white ml-4">
-            <SelectValue placeholder={session.user.name ?? "User"} />
+            <SelectValue
+              className="text-white"
+              placeholder={
+                session.user.image && (
+                  <Image
+                    width={20}
+                    height={20}
+                    src={session.user.image}
+                    alt="User avatar"
+                  />
+                )
+              }
+            />
           </SelectTrigger>
 
           <SelectContent className="bg-black text-white border border-gray-700">
             <SelectGroup>
-              <SelectItem value="profile" className="cursor-pointer hover:bg-gray-800">
+              <SelectItem
+                value="profile"
+                className="cursor-pointer hover:bg-gray-800"
+              >
                 Profile
               </SelectItem>
 

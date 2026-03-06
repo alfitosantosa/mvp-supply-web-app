@@ -13,17 +13,17 @@
 // }
 
 export interface companyForm {
-        name: string;
-        brandName: string;
-        address: string;
-        email: string;
-        phone: string;
-        bankName: string;
-        bankAccount: string;
-        senderName: string;
-        senderTitle: string;
+  name: string;
+  brandName: string;
+  address: string;
+  email: string;
+  phone: string;
+  bankName: string;
+  bankAccount: string;
+  senderName: string;
+  senderTitle: string;
 }
 
 export interface companyData extends companyForm {
-    id: string;
+  id: string;
 }
