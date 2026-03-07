@@ -120,10 +120,17 @@ const formatCurrency = (value: number) =>
   }).format(value);
 
 const getStockBadge = (stock: number) => {
-  if (stock === 0) return <Badge variant="destructive">Habis</Badge>;
-  if (stock <= 10)
+  if (stock <= 0) {
+    return <Badge variant="destructive">Habis</Badge>;
+  } else if (stock <= 10) {
     return <Badge className="bg-yellow-500 hover:bg-yellow-600">Menipis</Badge>;
-  return <Badge className="bg-green-600 hover:bg-green-700">Tersedia</Badge>;
+  } else {
+    return <Badge className="bg-green-600 hover:bg-green-700">Tersedia</Badge>;
+  }
+  // if (stock === 0) return <Badge variant="destructive">Habis</Badge>;
+  // if (stock <= 10)
+  //   return <Badge className="bg-yellow-500 hover:bg-yellow-600">Menipis</Badge>;
+  // return <Badge className="bg-green-600 hover:bg-green-700">Tersedia</Badge>;
 };
 
 // ─── Form Dialog ─────────────────────────────────────────────────────────────
@@ -512,7 +519,10 @@ export default function ProductDataTable() {
   });
 
   // Summary calculations
-  const totalValue = products.reduce((sum, p) => sum + p.total, 0);
+  const totalValue = products.reduce(
+    (acc, product) => acc + product.price * product.stock,
+    0,
+  );
   const outOfStock = products.filter((p) => p.stock === 0).length;
   const lowStock = products.filter((p) => p.stock > 0 && p.stock <= 10).length;
 
@@ -527,7 +537,7 @@ export default function ProductDataTable() {
   }
 
   return (
-    <div className="mx-auto min-h-screen my-8 p-6 max-w-7xl">
+    <div className="mx-auto max-w-7xl min-h-screen my-8 p-6">
       <div className="font-bold text-3xl mb-6">Manajemen Produk</div>
 
       {/* Summary Cards */}

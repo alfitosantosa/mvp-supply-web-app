@@ -47,7 +47,7 @@ export default function Navbar() {
   // Loading state
   if (isPending) {
     return (
-      <nav className=" bg-black text-white p-4">
+      <nav className="mx-auto bg-black text-white p-4">
         <div className="text-center">Loading...</div>
       </nav>
     );
@@ -57,7 +57,7 @@ export default function Navbar() {
   if (!session?.user) {
     return (
       <nav className="h-full bg-black text-white p-4 ">
-        <div className="mx-auto max-w-7xl flex items-center justify-between">
+        <div className="mx-auto max-w-7xl  flex items-center justify-between">
           <div className="text-lg font-bold">MVP Supply</div>
 
           <Button
