@@ -28,5 +28,37 @@ export const useCreateCompany = () => {
 };
 
 export const useUpdateCompany = () => {
-  
-}
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: (data) =>
+      fetch(`/api/company/`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["company"] });
+    },
+    onError: () => {
+      console.error("Failed to update company");
+    },
+  });
+  return { updateCompany: mutation.mutate };
+};
+
+export const useDeleteCompany = () => {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: (id: string) =>
+      fetch(`/api/company/`, {
+        method: "DELETE",
+        body: JSON.stringify(id),
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["company"] });
+    },
+    onError: () => {
+      console.error("Failed to delete company");
+    },
+  });
+  return { deleteCompany: mutation.mutate };
+};
