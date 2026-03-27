@@ -1,4 +1,19 @@
 "use client";
+
+// model Company {
+//   id        String    @id @default(cuid())
+//   name      String    // Contoh: PT Multi Visi Primakreasi
+//   brandName String    // Contoh: mvpsupply.id
+//   address   String    // Jl. Cikatomas II No. 18...
+//   email     String
+//   phone     String
+//   bankName  String    // BCA
+//   bankAccount String  // 001-669-6999
+//   senderName  String  // Vici Herlambang
+//   senderTitle String  // Co-Founder
+//   invoices  Invoice[]
+// }
+
 import { companyData } from "@/app/types/company";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -30,9 +45,10 @@ export const useCreateCompany = () => {
 export const useUpdateCompany = () => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: (data) =>
+    mutationFn: (data: companyData) =>
       fetch(`/api/company/`, {
         method: "PUT",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       }),
     onSuccess: () => {
@@ -51,7 +67,7 @@ export const useDeleteCompany = () => {
     mutationFn: (id: string) =>
       fetch(`/api/company/`, {
         method: "DELETE",
-        body: JSON.stringify(id),
+        body: JSON.stringify({ id }),
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["company"] });

@@ -133,6 +133,7 @@ model InvoiceItem {
   id          String   @id @default(cuid())
   invoiceId   String
   productId   String
+  productName String?
   imageUrl    String?
   description String?
   price       Decimal

@@ -19,12 +19,14 @@ export default function Navbar() {
 
   // Example static navbar data
   const dataNavbar = [
+    // { name: "Sales", href: "/dashboard/sales" },
+    // { name: "Inventory", href: "/dashboard/inventory" },
+    // { name: "Catalog", href: "/dashboard/catalog" },
     { name: "Home", href: "/" },
     { name: "Products", href: "/dashboard/products" },
-    { name: "Sales", href: "/dashboard/sales" },
-    { name: "Inventory", href: "/dashboard/inventory" },
-    { name: "Catalog", href: "/dashboard/catalog" },
     { name: "Invoice", href: "/dashboard/invoice" },
+    { name: "Company", href: "/dashboard/company" },
+    { name: "Customer", href: "/dashboard/customer" },
   ];
 
   // Session dari Better Auth
