@@ -45,7 +45,11 @@
     },
   },
   "trustedDependencies": [
+    "esbuild",
+    "msw",
+    "@prisma/engines",
     "sharp",
+    "prisma",
     "unrs-resolver",
   ],
   "packages": {

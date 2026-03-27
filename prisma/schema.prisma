@@ -85,46 +85,45 @@ model Company {
   bankAccount String
   senderName  String
   senderTitle String
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @updatedAt
   imageUrl    String?
-  createdAt   DateTime?  @default(now())
-  updatedAt   DateTime?  @updatedAt
   invoices    invoice[]
 
   @@map("Company")
 }
 
 model Customer {
-  id            String    @id @default(cuid())
-  name          String
-  address       String
-  imageUrl      String?
-  phone         String
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  invoices invoice[]
+  id        String    @id @default(cuid())
+  name      String
+  address   String
+  phone     String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  imageUrl  String?
+  invoices  invoice[]
 
   @@map("Customer")
 }
 
 model invoice {
-  id            String    @id @default(cuid())
-  invoiceNumber String    @unique
-  issuedAt      DateTime  @default(now())
+  id            String        @id @default(cuid())
+  invoiceNumber String        @unique
+  issuedAt      DateTime      @default(now())
   dueDate       DateTime
   companyId     String
   customerId    String
-  subTotal      Decimal   @default(0)
-  discountRate  Float     @default(0)
-  discountValue Decimal   @default(0)
-  totalAmount   Decimal   @default(0)
+  subTotal      Decimal       @default(0)
+  discountRate  Float         @default(0)
+  discountValue Decimal       @default(0)
+  totalAmount   Decimal       @default(0)
   totalInWords  String
-  status        String    @default("DRAFT")
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  company       Company   @relation(fields: [companyId], references: [id])
-  customer      Customer  @relation(fields: [customerId], references: [id])
-
+  status        String        @default("DRAFT")
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
   items         InvoiceItem[]
+  company       Company       @relation(fields: [companyId], references: [id])
+  customer      Customer      @relation(fields: [customerId], references: [id])
 
   @@map("invoices")
 }
@@ -133,31 +132,30 @@ model InvoiceItem {
   id          String   @id @default(cuid())
   invoiceId   String
   productId   String
-  productName String?
-  imageUrl    String?
   description String?
   price       Decimal
   quantity    Int
   total       Decimal
-  invoice     invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
-  product     Product @relation(fields: [productId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  imageUrl    String?
+  productName String?
+  invoice     invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [productId], references: [id])
 
   @@map("invoice_items")
 }
 
 model Product {
-  id          String   @id @default(cuid())
-  name        String
-  price       Decimal  @default(0)
-  description String?
-  imageUrl    String?
-  stock       Decimal  @default(1)
-  total       Decimal?  @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
+  id           String        @id @default(cuid())
+  name         String
+  price        Decimal       @default(0)
+  description  String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  stock        Decimal       @default(1)
+  imageUrl     String?
+  total        Decimal?      @default(0)
   invoiceItems InvoiceItem[]
 
   @@map("products")
