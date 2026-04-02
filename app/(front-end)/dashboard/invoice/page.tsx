@@ -96,14 +96,14 @@ import {
   useCreateInvoice,
   useUpdateInvoice,
   useDeleteInvoice,
-} from "@/app/hooks/invoice/useInvoice";
+} from "@/app/(hooks)/hooks/invoice/useInvoice";
 import {
   useCreateInvoiceItems,
   useDeleteInvoiceItems,
-} from "@/app/hooks/invoiceItems/useInvoiceItems";
-import { useGetProduct } from "@/app/hooks/product/useProduct";
-import { UseGetCustomer } from "@/app/hooks/customer/useCustomer";
-import { useCompany } from "@/app/hooks/company/useCompany";
+} from "@/app/(hooks)/hooks/invoiceItems/useInvoiceItems";
+import { useGetProduct } from "@/app/(hooks)/hooks/product/useProduct";
+import { UseGetCustomer } from "@/app/(hooks)/hooks/customer/useCustomer";
+import { useCompany } from "@/app/(hooks)/hooks/company/useCompany";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -253,6 +253,7 @@ function toTerbilang(amount: number): string {
 
 const invoiceItemSchema = z.object({
   productId: z.string().min(1, "Produk wajib dipilih"),
+  productName: z.string().optional(),
   description: z.string().optional(),
   price: z.number().min(0, "Harga tidak boleh negatif"),
   quantity: z.number().min(1, "Kuantitas minimal 1"),
@@ -336,6 +337,7 @@ function InvoiceFormDialog({
       items: [
         {
           productId: "",
+          productName: "",
           description: "",
           price: 0,
           quantity: 1,
@@ -367,6 +369,7 @@ function InvoiceFormDialog({
     const product = products.find((p) => p.id === productId);
     if (product) {
       setValue(`items.${index}.productId`, productId);
+      setValue(`items.${index}.productName`, product.name);
       setValue(`items.${index}.price`, Number(product.price));
       setValue(`items.${index}.imageUrl`, product.imageUrl ?? null);
       const qty = watchedItems?.[index]?.quantity ?? 1;
@@ -401,6 +404,7 @@ function InvoiceFormDialog({
         items: editData.items?.length
           ? editData.items.map((item) => ({
               productId: item.productId,
+              productName: item.product?.name ?? item.productName ?? "",
               description: item.description ?? "",
               price: Number(item.price),
               quantity: item.quantity,
@@ -410,6 +414,7 @@ function InvoiceFormDialog({
           : [
               {
                 productId: "",
+                productName: "",
                 description: "",
                 price: 0,
                 quantity: 1,
@@ -430,6 +435,7 @@ function InvoiceFormDialog({
         items: [
           {
             productId: "",
+            productName: "",
             description: "",
             price: 0,
             quantity: 1,
@@ -473,6 +479,7 @@ function InvoiceFormDialog({
           data.items.map((item) => ({
             invoiceId: editData.id,
             productId: item.productId,
+            productName: item.productName ?? "",
             description: item.description ?? null,
             price: item.price,
             quantity: item.quantity,
@@ -489,6 +496,7 @@ function InvoiceFormDialog({
             data.items.map((item) => ({
               invoiceId: newInvoiceId,
               productId: item.productId,
+              productName: item.productName ?? "",
               description: item.description ?? null,
               price: item.price,
               quantity: item.quantity,
@@ -654,6 +662,7 @@ function InvoiceFormDialog({
                 onClick={() =>
                   append({
                     productId: "",
+                    productName: "",
                     description: "",
                     price: 0,
                     quantity: 1,

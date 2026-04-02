@@ -1,14 +1,18 @@
+"use client";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import Link from "next/link";
+import { useGetInvoice } from "./(hooks)/hooks/invoice/useInvoice";
+import { ChartAreaInteractive } from "@/components/charts/charts-hero-invoice";
 
 export default function Home() {
+  const { data, isLoading } = useGetInvoice();
+
+  console.log(data);
   return (
     <>
-      <div className="flex justify-center items-center h-screen w-max-7xl ">
-        <Button>
-          <Link href="/auth/sign-in">Login</Link>
-        </Button>
+      {/* chart pendapatan invoice perhari perbulan per 3 bulan  */}
+      <div className="mx-auto mt-2 h-screen max-w-7xl justify-center ">
+        <ChartAreaInteractive />
       </div>
     </>
   );

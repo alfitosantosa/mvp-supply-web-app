@@ -28,7 +28,10 @@ import {
   Users,
   Calendar,
   ImageIcon,
+  Eye,
+  Upload,
 } from "lucide-react";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -80,7 +83,7 @@ import {
   UsePostCustomer,
   useUpdateCustomer,
   useDeleteCustomer,
-} from "@/app/hooks/customer/useCustomer";
+} from "@/app/(hooks)/hooks/customer/useCustomer";
 
 // Type definitions
 export type CustomerData = {
@@ -98,11 +101,7 @@ const customerSchema = z.object({
   name: z.string().min(1, "Nama pelanggan wajib diisi"),
   address: z.string().min(1, "Alamat wajib diisi"),
   phone: z.string().min(1, "Nomor telepon wajib diisi"),
-  imageUrl: z
-    .string()
-    .url("Format URL tidak valid")
-    .optional()
-    .or(z.literal("")),
+  imageUrl: z.string().optional().or(z.literal("")),
 });
 
 type CustomerFormValues = z.infer<typeof customerSchema>;
@@ -126,6 +125,178 @@ function formatDate(dateStr: string) {
   });
 }
 
+// ─── AvatarUpload ─────────────────────────────────────────────────────────────
+
+function AvatarUpload({
+  currentAvatarUrl,
+  onUploadSuccess,
+  disabled = false,
+}: {
+  currentAvatarUrl?: string;
+  onUploadSuccess: (url: string) => void;
+  disabled?: boolean;
+}) {
+  const [previewUrl, setPreviewUrl] = React.useState<string | null>(
+    currentAvatarUrl || null,
+  );
+  const [isUploading, setIsUploading] = React.useState(false);
+  const [showPreview, setShowPreview] = React.useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    setPreviewUrl(currentAvatarUrl || null);
+  }, [currentAvatarUrl]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File tidak boleh lebih dari 5MB");
+      return;
+    }
+    if (!file.type.startsWith("image/")) {
+      toast.error("File harus berupa gambar");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onloadend = () => setPreviewUrl(reader.result as string);
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemove = () => {
+    if (fileInputRef.current) {
+      try {
+        fileInputRef.current.value = "";
+      } catch {}
+    }
+    setPreviewUrl(null);
+    setShowPreview(false);
+    onUploadSuccess("");
+    toast.success("Avatar dihapus");
+  };
+
+  const handleUpload = async () => {
+    const file = fileInputRef.current?.files?.[0];
+    if (!file) {
+      toast.error("Silakan pilih file terlebih dahulu");
+      return;
+    }
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_FILESERVER_URL}`, {
+        method: "POST",
+        body: formData,
+      });
+      if (!res.ok) {
+        const e = await res.json().catch(() => ({}));
+        throw new Error(e.message || "Failed to upload");
+      }
+      const data = await res.json();
+      if (!data.fileUrl) throw new Error("No file URL returned from server");
+      setPreviewUrl(data.fileUrl);
+      onUploadSuccess(data.fileUrl);
+      toast.success("Avatar berhasil diunggah!");
+    } catch (error: any) {
+      toast.error(error.message || "Gagal mengunggah avatar");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Label htmlFor="picture-customer">Avatar</Label>
+      <div className="flex gap-4 items-start">
+        <div className="relative">
+          {previewUrl ? (
+            <div className="relative group">
+              <Image
+                src={previewUrl}
+                alt="Avatar preview"
+                width={96}
+                height={96}
+                className="w-24 h-24 rounded-full object-cover border-2"
+              />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  className="text-white hover:text-white"
+                  onClick={() => setShowPreview(true)}
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="w-24 h-24 rounded-full bg-muted flex items-center justify-center border-2 border-dashed">
+              <User className="h-10 w-10 text-muted-foreground" />
+            </div>
+          )}
+        </div>
+        <div className="flex-1 space-y-2">
+          <Input
+            ref={fileInputRef}
+            id="picture-customer"
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            disabled={disabled || isUploading}
+          />
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleUpload}
+              disabled={
+                disabled || isUploading || !fileInputRef.current?.files?.[0]
+              }
+              className="flex-1"
+            >
+              <Upload className="h-4 w-4 mr-2" />
+              {isUploading ? "Mengunggah..." : "Upload Avatar"}
+            </Button>
+            {previewUrl && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleRemove}
+                disabled={disabled || isUploading}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Format: JPG, PNG, GIF. Maksimal 5MB.
+          </p>
+        </div>
+      </div>
+      {previewUrl && (
+        <Dialog open={showPreview} onOpenChange={setShowPreview}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Preview Avatar</DialogTitle>
+            </DialogHeader>
+            <div className="flex items-center justify-center p-4">
+              <Image
+                src={previewUrl}
+                alt="Avatar preview"
+                className="max-w-full max-h-[70vh] rounded-lg"
+                width={500}
+                height={500}
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+    </div>
+  );
+}
+
 // Create/Edit Dialog Component
 function CustomerFormDialog({
   open,
@@ -147,6 +318,7 @@ function CustomerFormDialog({
     formState: { errors, isSubmitting },
     reset,
     watch,
+    setValue,
   } = useForm<CustomerFormValues>({
     resolver: zodResolver(customerSchema),
     defaultValues: {
@@ -260,16 +432,12 @@ function CustomerFormDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="imageUrl">
-              URL Foto{" "}
-              <span className="text-muted-foreground font-normal">
-                (Opsional)
-              </span>
-            </Label>
-            <Input
-              id="imageUrl"
-              placeholder="https://example.com/photo.jpg"
-              {...register("imageUrl")}
+            <AvatarUpload
+              currentAvatarUrl={editData?.imageUrl || undefined}
+              onUploadSuccess={(url) =>
+                setValue("imageUrl", url, { shouldValidate: true })
+              }
+              disabled={isPending}
             />
             {errors.imageUrl && (
               <p className="text-sm text-red-500">{errors.imageUrl.message}</p>

@@ -68,6 +68,11 @@ export async function GET() {
         },
         company: true,
         customer: true,
+        _count: {
+          select: {
+            items: true,
+          },
+        },
       },
     });
     return new Response(JSON.stringify(getInvoice));

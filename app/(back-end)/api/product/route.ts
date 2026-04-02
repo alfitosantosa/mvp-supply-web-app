@@ -1,11 +1,13 @@
 // model Product {
-//   id          String   @id @default(cuid())
-//   name        String
-//   price       Decimal  @default(0)
-//   description String?
-//   createdAt   DateTime @default(now())
-//   updatedAt   DateTime @updatedAt
-
+//   id           String        @id @default(cuid())
+//   name         String
+//   price        Decimal       @default(0)
+//   description  String?
+//   createdAt    DateTime      @default(now())
+//   updatedAt    DateTime      @updatedAt
+//   stock        Decimal       @default(1)
+//   imageUrl     String?
+//   total        Decimal?      @default(0)
 //   invoiceItems InvoiceItem[]
 
 //   @@map("products")
@@ -16,7 +18,11 @@ import { NextRequest } from "next/server";
 
 export async function GET() {
   try {
-    const product = await prisma.product.findMany();
+    const product = await prisma.product.findMany({
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
     return Response.json({ product });
   } catch (error) {
     console.error("Error fetching product:", error);
@@ -28,11 +34,12 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, price, description, stock } = await request.json();
+    const { name, price, description, stock, imageUrl } = await request.json();
     const createProduct = await prisma.product.create({
       data: {
         name,
         price,
+        imageUrl,
         description,
         stock,
         total: price * stock,
@@ -49,7 +56,8 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(reuquest: NextRequest) {
   try {
-    const { id, name, price, description, stock } = await reuquest.json();
+    const { id, name, price, description, stock, imageUrl } =
+      await reuquest.json();
 
     const updateProduct = await prisma.product.update({
       where: { id },
@@ -58,6 +66,7 @@ export async function PUT(reuquest: NextRequest) {
         price,
         description,
         stock,
+        imageUrl,
         total: price * stock,
       },
     });

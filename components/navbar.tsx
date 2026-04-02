@@ -12,6 +12,7 @@ import { Button } from "./ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "@/lib/auth-client";
 import Image from "next/image";
+import Logo from "@/public/logo.png";
 
 export default function Navbar() {
   const router = useRouter();
@@ -46,11 +47,15 @@ export default function Navbar() {
     }
   };
 
-  // Loading state
+  // Loading state — render struktur yang sama agar tidak hydration mismatch
   if (isPending) {
     return (
-      <nav className="mx-auto bg-black text-white p-4">
-        <div className="text-center">Loading...</div>
+      <nav className="h-full bg-black text-white p-4">
+        <div className="mx-auto max-w-7xl flex items-center justify-between">
+          <Image src={Logo} alt="logo" width={100} height={100} />
+          <div className="w-48 h-9 bg-gray-800 rounded animate-pulse" />
+          <div className="w-40 h-9 bg-gray-800 rounded animate-pulse ml-4" />
+        </div>
       </nav>
     );
   }
@@ -58,10 +63,9 @@ export default function Navbar() {
   // Not logged in
   if (!session?.user) {
     return (
-      <nav className="h-full bg-black text-white p-4 ">
-        <div className="mx-auto max-w-7xl  flex items-center justify-between">
-          <div className="text-lg font-bold">MVP Supply</div>
-
+      <nav className="h-full bg-black text-white p-4">
+        <div className="mx-auto max-w-7xl flex items-center justify-between">
+          <Image src={Logo} alt="Logo" width={100} height={100} />
           <Button
             variant="outline"
             className="text-black bg-white hover:bg-gray-200"
@@ -77,7 +81,7 @@ export default function Navbar() {
   return (
     <nav className="h-full bg-black text-white p-4">
       <div className="mx-auto max-w-7xl flex items-center justify-between">
-        <div className="text-lg font-bold">MVP Supply</div>
+        <Image src={Logo} alt="logo" width={100} height={100} />
 
         {/* Select Menu Navigation */}
         <Select onValueChange={handleNavigate} value={pathname}>

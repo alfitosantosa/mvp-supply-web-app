@@ -81,7 +81,7 @@ import {
   useCreateCompany,
   useUpdateCompany,
   useDeleteCompany,
-} from "@/app/hooks/company/useCompany";
+} from "@/app/(hooks)/hooks/company/useCompany";
 
 // Type definition
 export type CompanyData = {

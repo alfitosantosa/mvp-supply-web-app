@@ -26,6 +26,10 @@ import {
   DollarSign,
   Layers,
   TrendingUp,
+  Eye,
+  Upload,
+  User,
+  ImageDownIcon,
 } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -77,12 +81,14 @@ import {
   useDeleteProduct,
   useGetProduct,
   useUpdateProduct,
-} from "@/app/hooks/product/useProduct";
+} from "@/app/(hooks)/hooks/product/useProduct";
+import Image from "next/image";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 export type ProductData = {
   id: string;
+  imageUrl: string;
   name: string;
   price: number;
   description?: string | null;
@@ -92,17 +98,11 @@ export type ProductData = {
   updatedAt: string;
 };
 
-type ProductForm = {
-  name: string;
-  price: number;
-  description?: string;
-  stock: number;
-};
-
 // ─── Schema ──────────────────────────────────────────────────────────────────
 
 const productSchema = z.object({
   name: z.string().min(1, "Nama produk wajib diisi"),
+  imageUrl: z.string().min(1, "Foto produk wajib diisi"),
   price: z.coerce.number().min(0, "Harga tidak boleh negatif"),
   description: z.string().optional(),
   stock: z.coerce.number().int().min(0, "Stok tidak boleh negatif"),
@@ -127,11 +127,211 @@ const getStockBadge = (stock: number) => {
   } else {
     return <Badge className="bg-green-600 hover:bg-green-700">Tersedia</Badge>;
   }
-  // if (stock === 0) return <Badge variant="destructive">Habis</Badge>;
-  // if (stock <= 10)
-  //   return <Badge className="bg-yellow-500 hover:bg-yellow-600">Menipis</Badge>;
-  // return <Badge className="bg-green-600 hover:bg-green-700">Tersedia</Badge>;
 };
+
+// ─── avatar uploader ─────────────────────────────────────────────────────────────
+
+function AvatarUpload({
+  currentAvatarUrl,
+  onUploadSuccess,
+  disabled = false,
+}: {
+  currentAvatarUrl?: string;
+  onUploadSuccess: (url: string) => void;
+  disabled?: boolean;
+}) {
+  const [previewUrl, setPreviewUrl] = React.useState<string | null>(
+    currentAvatarUrl || null,
+  );
+  const [isUploading, setIsUploading] = React.useState(false);
+  const [showPreview, setShowPreview] = React.useState(false);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    setPreviewUrl(currentAvatarUrl || null);
+  }, [currentAvatarUrl]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File tidak boleh lebih dari 5MB");
+      return;
+    }
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      toast.error("File harus berupa gambar");
+      return;
+    }
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemove = () => {
+    // Clear file input if present
+    if (fileInputRef.current) {
+      try {
+        fileInputRef.current.value = "";
+      } catch {
+        // ignore if setting value fails in some environments
+      }
+    }
+    // Clear preview and notify parent (send empty string to indicate removal)
+    setPreviewUrl(null);
+    setShowPreview(false);
+    onUploadSuccess("");
+    toast.success("Avatar dihapus");
+  };
+
+  const handleUpload = async () => {
+    const file = fileInputRef.current?.files?.[0];
+    if (!file) {
+      toast.error("Silakan pilih file terlebih dahulu");
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_FILESERVER_URL}`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.message || "Failed to upload avatar");
+      }
+
+      const data = await res.json();
+
+      // Pastikan fileUrl ada
+      if (!data.fileUrl) {
+        throw new Error("No file URL returned from server");
+      }
+
+      // Set preview dan callback
+      setPreviewUrl(data.fileUrl);
+      onUploadSuccess(data.fileUrl);
+      toast.success("Avatar berhasil diunggah!");
+    } catch (error: any) {
+      console.error("Upload error:", error);
+      toast.error(error.message || "Gagal mengunggah avatar");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Label htmlFor="picture">Foto Produk</Label>
+
+      <div className="flex gap-4 items-start">
+        {/* Preview */}
+        <div className="relative">
+          {previewUrl ? (
+            <div className="relative group">
+              <Image
+                src={previewUrl}
+                alt="Avatar preview"
+                width={20}
+                height={20}
+                className="w-24 h-24 rounded-full object-cover border-2"
+              />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  className="text-white hover:text-white"
+                  onClick={() => setShowPreview(true)}
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="w-24 h-24 rounded-full bg-muted flex items-center justify-center border-2 border-dashed">
+              <User className="h-10 w-10 text-muted-foreground" />
+            </div>
+          )}
+        </div>
+
+        {/* Upload Controls */}
+        <div className="flex-1 space-y-2">
+          <Input
+            ref={fileInputRef}
+            id="picture"
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            disabled={disabled || isUploading}
+          />
+
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleUpload}
+              disabled={
+                disabled || isUploading || !fileInputRef.current?.files?.[0]
+              }
+              className="flex-1"
+            >
+              <Upload className="h-4 w-4 mr-2" />
+              {isUploading ? "Mengunggah..." : "Upload Avatar"}
+            </Button>
+
+            {previewUrl && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleRemove}
+                disabled={disabled || isUploading}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+
+          <p className="text-xs text-muted-foreground">
+            Format: JPG, PNG, GIF. Maksimal 5MB.
+          </p>
+        </div>
+      </div>
+
+      {/* Preview Dialog */}
+      {previewUrl && (
+        <Dialog open={showPreview} onOpenChange={setShowPreview}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Preview Produk</DialogTitle>
+            </DialogHeader>
+            <div className="flex items-center justify-center p-4">
+              <Image
+                src={previewUrl}
+                alt="Avatar preview"
+                className="max-w-full max-h-[70vh] rounded-lg"
+                width={500}
+                height={500}
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+    </div>
+  );
+}
 
 // ─── Form Dialog ─────────────────────────────────────────────────────────────
 
@@ -152,9 +352,12 @@ function ProductFormDialog({
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
+    watch,
   } = useForm({
     resolver: zodResolver(productSchema),
     defaultValues: {
+      imageUrl: "",
       name: "",
       price: 0,
       description: "",
@@ -165,13 +368,14 @@ function ProductFormDialog({
   React.useEffect(() => {
     if (editData) {
       reset({
+        imageUrl: editData.imageUrl,
         name: editData.name,
         price: editData.price,
         description: editData.description ?? "",
         stock: editData.stock,
       });
     } else {
-      reset({ name: "", price: 0, description: "", stock: 0 });
+      reset({ imageUrl: "", name: "", price: 0, description: "", stock: 0 });
     }
   }, [editData, reset]);
 
@@ -180,6 +384,7 @@ function ProductFormDialog({
       if (editData) {
         await updateProduct.mutateAsync({
           id: editData.id,
+          imageUrl: data.imageUrl,
           name: data.name,
           price: data.price,
           description: data.description,
@@ -209,6 +414,16 @@ function ProductFormDialog({
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <AvatarUpload
+            currentAvatarUrl={editData?.imageUrl || undefined}
+            onUploadSuccess={(url) =>
+              setValue("imageUrl", url, { shouldValidate: true })
+            }
+            disabled={isPending}
+          />
+          {errors.imageUrl && (
+            <p className="text-sm text-red-500">{errors.imageUrl.message}</p>
+          )}
           <div className="space-y-2">
             <Label htmlFor="name">Nama Produk</Label>
             <Input
@@ -374,6 +589,40 @@ export default function ProductDataTable() {
       ),
       enableSorting: false,
       enableHiding: false,
+    },
+    {
+      accessorKey: "imageUrl",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          <ImageDownIcon className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => {
+        const imageUrl = row.getValue("imageUrl") as string;
+        return (
+          <div className="flex items-center justify-center">
+            {imageUrl ? (
+              <Image
+                src={imageUrl}
+                alt={row.getValue("name")}
+                width={48}
+                height={48}
+                className="rounded-md object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = "/placeholder-image.png";
+                }}
+              />
+            ) : (
+              <div className="bg-muted rounded-md w-12 h-12 flex items-center justify-center">
+                <ImageDownIcon className="h-6 w-6 text-muted-foreground" />
+              </div>
+            )}
+          </div>
+        );
+      },
     },
     {
       accessorKey: "name",

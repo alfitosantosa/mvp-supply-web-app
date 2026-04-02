@@ -23,4 +23,13 @@ export interface InvoiceData extends InvoiceForm {
   id: string;
   createdAt: string;
   updatedAt: string;
+  items?: Items[];
+  company?: {
+    id: string;
+    name: string;
+    brandName: string;
+    imageUrl?: string | null;
+  };
+  customer?: { id: string; name: string };
+  _count?: { items: number };
 }
