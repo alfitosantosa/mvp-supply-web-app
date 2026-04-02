@@ -193,8 +193,8 @@ export function ChartAreaInteractive() {
                     }
                     formatter={(value, name) => {
                       if (name === "pendapatan")
-                        return [fmt(Number(value)), "Pendapatan"];
-                      return [value, "Jumlah Item"];
+                        return ["Pendapatan : ", fmt(Number(value))];
+                      return ["Jumlah Item : ", value];
                     }}
                     indicator="dot"
                   />

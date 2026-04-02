@@ -2,36 +2,18 @@
 //   id          String   @id @default(cuid())
 //   invoiceId   String
 //   productId   String
-//   imageUrl    String?
 //   description String?
 //   price       Decimal
 //   quantity    Int
 //   total       Decimal
-//   invoice     invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
-//   product     Product @relation(fields: [productId], references: [id])
 //   createdAt   DateTime @default(now())
 //   updatedAt   DateTime @updatedAt
-
+//   imageUrl    String?
+//   productName String?
+//   invoice     invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+//   product     Product  @relation(fields: [productId], references: [id])
 //   @@map("invoice_items")
 // }
-
-// model Product {
-//   id          String   @id @default(cuid())
-//   name        String
-//   price       Decimal  @default(0)
-//   description String?
-//   imageUrl    String?
-//   stock       Decimal  @default(1)
-//   total       Decimal?  @default(0)
-//   createdAt   DateTime @default(now())
-//   updatedAt   DateTime @updatedAt
-
-//   invoiceItems InvoiceItem[]
-
-//   @@map("products")
-// }
-
-//crud for invoice items
 
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -52,7 +34,7 @@ export async function POST(request: NextRequest) {
   const { invoiceItems } = await request.json();
 
   const CreateInvoiceItems = await prisma.invoiceItem.createMany({
-    data: invoiceItems,
+    data: invoiceItems.map(({ productName, ...item }: any) => item),
   });
 
   return NextResponse.json(CreateInvoiceItems);
