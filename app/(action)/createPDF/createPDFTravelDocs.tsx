@@ -346,11 +346,17 @@ function TravelDocsDocument({ data }: { data: TravelDocsPDFData }) {
           <View style={S.totalsWrap}>
             <View style={S.totalLine}>
               <Text style={S.totalLbl}>Subtotal</Text>
-              <Text style={S.totalVal}>{fmt(data.totalAmount)}</Text>
+              <Text style={S.totalVal}>{fmt(data.subTotal)}</Text>
             </View>
+            {data.discountRate > 0 && (
+              <View style={S.totalLine}>
+                <Text style={S.totalLbl}>Diskon ({data.discountRate}%)</Text>
+                <Text style={S.totalVal}>-{fmt(data.discountValue)}</Text>
+              </View>
+            )}
             <View style={S.totalLine}>
-              <Text style={S.totalLbl}>PPN (11%)</Text>
-              <Text style={S.totalVal}>{fmt(tax)}</Text>
+              <Text style={S.totalLbl}>PPN ({taxRate}%)</Text>
+              <Text style={S.totalVal}>{fmt(taxValue)}</Text>
             </View>
             <View style={S.totalDivider} />
             <View style={S.grandRow}>
