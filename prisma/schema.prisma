@@ -116,13 +116,13 @@ model invoice {
   subTotal      Decimal       @default(0)
   discountRate  Float         @default(0)
   discountValue Decimal       @default(0)
-  taxRate       Float         @default(0)
-  taxValue      Decimal       @default(0)
   totalAmount   Decimal       @default(0)
   totalInWords  String
   status        String        @default("DRAFT")
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+  taxValue      Decimal       @default(0)
+  taxRate       Float         @default(0)
   items         InvoiceItem[]
   company       Company       @relation(fields: [companyId], references: [id])
   customer      Customer      @relation(fields: [customerId], references: [id])

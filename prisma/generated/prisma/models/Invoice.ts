@@ -30,18 +30,18 @@ export type InvoiceAvgAggregateOutputType = {
   subTotal: runtime.Decimal | null
   discountRate: number | null
   discountValue: runtime.Decimal | null
-  taxRate: number | null
-  taxValue: runtime.Decimal | null
   totalAmount: runtime.Decimal | null
+  taxValue: runtime.Decimal | null
+  taxRate: number | null
 }
 
 export type InvoiceSumAggregateOutputType = {
   subTotal: runtime.Decimal | null
   discountRate: number | null
   discountValue: runtime.Decimal | null
-  taxRate: number | null
-  taxValue: runtime.Decimal | null
   totalAmount: runtime.Decimal | null
+  taxValue: runtime.Decimal | null
+  taxRate: number | null
 }
 
 export type InvoiceMinAggregateOutputType = {
@@ -54,13 +54,13 @@ export type InvoiceMinAggregateOutputType = {
   subTotal: runtime.Decimal | null
   discountRate: number | null
   discountValue: runtime.Decimal | null
-  taxRate: number | null
-  taxValue: runtime.Decimal | null
   totalAmount: runtime.Decimal | null
   totalInWords: string | null
   status: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  taxValue: runtime.Decimal | null
+  taxRate: number | null
 }
 
 export type InvoiceMaxAggregateOutputType = {
@@ -73,13 +73,13 @@ export type InvoiceMaxAggregateOutputType = {
   subTotal: runtime.Decimal | null
   discountRate: number | null
   discountValue: runtime.Decimal | null
-  taxRate: number | null
-  taxValue: runtime.Decimal | null
   totalAmount: runtime.Decimal | null
   totalInWords: string | null
   status: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  taxValue: runtime.Decimal | null
+  taxRate: number | null
 }
 
 export type InvoiceCountAggregateOutputType = {
@@ -92,13 +92,13 @@ export type InvoiceCountAggregateOutputType = {
   subTotal: number
   discountRate: number
   discountValue: number
-  taxRate: number
-  taxValue: number
   totalAmount: number
   totalInWords: number
   status: number
   createdAt: number
   updatedAt: number
+  taxValue: number
+  taxRate: number
   _all: number
 }
 
@@ -107,18 +107,18 @@ export type InvoiceAvgAggregateInputType = {
   subTotal?: true
   discountRate?: true
   discountValue?: true
-  taxRate?: true
-  taxValue?: true
   totalAmount?: true
+  taxValue?: true
+  taxRate?: true
 }
 
 export type InvoiceSumAggregateInputType = {
   subTotal?: true
   discountRate?: true
   discountValue?: true
-  taxRate?: true
-  taxValue?: true
   totalAmount?: true
+  taxValue?: true
+  taxRate?: true
 }
 
 export type InvoiceMinAggregateInputType = {
@@ -131,13 +131,13 @@ export type InvoiceMinAggregateInputType = {
   subTotal?: true
   discountRate?: true
   discountValue?: true
-  taxRate?: true
-  taxValue?: true
   totalAmount?: true
   totalInWords?: true
   status?: true
   createdAt?: true
   updatedAt?: true
+  taxValue?: true
+  taxRate?: true
 }
 
 export type InvoiceMaxAggregateInputType = {
@@ -150,13 +150,13 @@ export type InvoiceMaxAggregateInputType = {
   subTotal?: true
   discountRate?: true
   discountValue?: true
-  taxRate?: true
-  taxValue?: true
   totalAmount?: true
   totalInWords?: true
   status?: true
   createdAt?: true
   updatedAt?: true
+  taxValue?: true
+  taxRate?: true
 }
 
 export type InvoiceCountAggregateInputType = {
@@ -169,13 +169,13 @@ export type InvoiceCountAggregateInputType = {
   subTotal?: true
   discountRate?: true
   discountValue?: true
-  taxRate?: true
-  taxValue?: true
   totalAmount?: true
   totalInWords?: true
   status?: true
   createdAt?: true
   updatedAt?: true
+  taxValue?: true
+  taxRate?: true
   _all?: true
 }
 
@@ -275,13 +275,13 @@ export type InvoiceGroupByOutputType = {
   subTotal: runtime.Decimal
   discountRate: number
   discountValue: runtime.Decimal
-  taxRate: number
-  taxValue: runtime.Decimal
   totalAmount: runtime.Decimal
   totalInWords: string
   status: string
   createdAt: Date
   updatedAt: Date
+  taxValue: runtime.Decimal
+  taxRate: number
   _count: InvoiceCountAggregateOutputType | null
   _avg: InvoiceAvgAggregateOutputType | null
   _sum: InvoiceSumAggregateOutputType | null
@@ -317,13 +317,13 @@ export type invoiceWhereInput = {
   subTotal?: Prisma.DecimalFilter<"invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: Prisma.FloatFilter<"invoice"> | number
   discountValue?: Prisma.DecimalFilter<"invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: Prisma.FloatFilter<"invoice"> | number
-  taxValue?: Prisma.DecimalFilter<"invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFilter<"invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords?: Prisma.StringFilter<"invoice"> | string
   status?: Prisma.StringFilter<"invoice"> | string
   createdAt?: Prisma.DateTimeFilter<"invoice"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"invoice"> | Date | string
+  taxValue?: Prisma.DecimalFilter<"invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: Prisma.FloatFilter<"invoice"> | number
   items?: Prisma.InvoiceItemListRelationFilter
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
@@ -339,13 +339,13 @@ export type invoiceOrderByWithRelationInput = {
   subTotal?: Prisma.SortOrder
   discountRate?: Prisma.SortOrder
   discountValue?: Prisma.SortOrder
-  taxRate?: Prisma.SortOrder
-  taxValue?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   totalInWords?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  taxValue?: Prisma.SortOrder
+  taxRate?: Prisma.SortOrder
   items?: Prisma.InvoiceItemOrderByRelationAggregateInput
   company?: Prisma.CompanyOrderByWithRelationInput
   customer?: Prisma.CustomerOrderByWithRelationInput
@@ -364,13 +364,13 @@ export type invoiceWhereUniqueInput = Prisma.AtLeast<{
   subTotal?: Prisma.DecimalFilter<"invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: Prisma.FloatFilter<"invoice"> | number
   discountValue?: Prisma.DecimalFilter<"invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: Prisma.FloatFilter<"invoice"> | number
-  taxValue?: Prisma.DecimalFilter<"invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFilter<"invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords?: Prisma.StringFilter<"invoice"> | string
   status?: Prisma.StringFilter<"invoice"> | string
   createdAt?: Prisma.DateTimeFilter<"invoice"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"invoice"> | Date | string
+  taxValue?: Prisma.DecimalFilter<"invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: Prisma.FloatFilter<"invoice"> | number
   items?: Prisma.InvoiceItemListRelationFilter
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
   customer?: Prisma.XOR<Prisma.CustomerScalarRelationFilter, Prisma.CustomerWhereInput>
@@ -386,13 +386,13 @@ export type invoiceOrderByWithAggregationInput = {
   subTotal?: Prisma.SortOrder
   discountRate?: Prisma.SortOrder
   discountValue?: Prisma.SortOrder
-  taxRate?: Prisma.SortOrder
-  taxValue?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   totalInWords?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  taxValue?: Prisma.SortOrder
+  taxRate?: Prisma.SortOrder
   _count?: Prisma.invoiceCountOrderByAggregateInput
   _avg?: Prisma.invoiceAvgOrderByAggregateInput
   _max?: Prisma.invoiceMaxOrderByAggregateInput
@@ -413,13 +413,13 @@ export type invoiceScalarWhereWithAggregatesInput = {
   subTotal?: Prisma.DecimalWithAggregatesFilter<"invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: Prisma.FloatWithAggregatesFilter<"invoice"> | number
   discountValue?: Prisma.DecimalWithAggregatesFilter<"invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: Prisma.FloatWithAggregatesFilter<"invoice"> | number
-  taxValue?: Prisma.DecimalWithAggregatesFilter<"invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalWithAggregatesFilter<"invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords?: Prisma.StringWithAggregatesFilter<"invoice"> | string
   status?: Prisma.StringWithAggregatesFilter<"invoice"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"invoice"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"invoice"> | Date | string
+  taxValue?: Prisma.DecimalWithAggregatesFilter<"invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: Prisma.FloatWithAggregatesFilter<"invoice"> | number
 }
 
 export type invoiceCreateInput = {
@@ -430,13 +430,13 @@ export type invoiceCreateInput = {
   subTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: number
   discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: number
-  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: number
   items?: Prisma.InvoiceItemCreateNestedManyWithoutInvoiceInput
   company: Prisma.CompanyCreateNestedOneWithoutInvoicesInput
   customer: Prisma.CustomerCreateNestedOneWithoutInvoicesInput
@@ -452,13 +452,13 @@ export type invoiceUncheckedCreateInput = {
   subTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: number
   discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: number
-  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: number
   items?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
 }
 
@@ -470,13 +470,13 @@ export type invoiceUpdateInput = {
   subTotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: Prisma.FloatFieldUpdateOperationsInput | number
   discountValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
   items?: Prisma.InvoiceItemUpdateManyWithoutInvoiceNestedInput
   company?: Prisma.CompanyUpdateOneRequiredWithoutInvoicesNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutInvoicesNestedInput
@@ -492,13 +492,13 @@ export type invoiceUncheckedUpdateInput = {
   subTotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: Prisma.FloatFieldUpdateOperationsInput | number
   discountValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
   items?: Prisma.InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
 }
 
@@ -512,13 +512,13 @@ export type invoiceCreateManyInput = {
   subTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: number
   discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: number
-  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: number
 }
 
 export type invoiceUpdateManyMutationInput = {
@@ -529,13 +529,13 @@ export type invoiceUpdateManyMutationInput = {
   subTotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: Prisma.FloatFieldUpdateOperationsInput | number
   discountValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type invoiceUncheckedUpdateManyInput = {
@@ -548,13 +548,13 @@ export type invoiceUncheckedUpdateManyInput = {
   subTotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: Prisma.FloatFieldUpdateOperationsInput | number
   discountValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type InvoiceListRelationFilter = {
@@ -577,22 +577,22 @@ export type invoiceCountOrderByAggregateInput = {
   subTotal?: Prisma.SortOrder
   discountRate?: Prisma.SortOrder
   discountValue?: Prisma.SortOrder
-  taxRate?: Prisma.SortOrder
-  taxValue?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   totalInWords?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  taxValue?: Prisma.SortOrder
+  taxRate?: Prisma.SortOrder
 }
 
 export type invoiceAvgOrderByAggregateInput = {
   subTotal?: Prisma.SortOrder
   discountRate?: Prisma.SortOrder
   discountValue?: Prisma.SortOrder
-  taxRate?: Prisma.SortOrder
-  taxValue?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
+  taxValue?: Prisma.SortOrder
+  taxRate?: Prisma.SortOrder
 }
 
 export type invoiceMaxOrderByAggregateInput = {
@@ -605,13 +605,13 @@ export type invoiceMaxOrderByAggregateInput = {
   subTotal?: Prisma.SortOrder
   discountRate?: Prisma.SortOrder
   discountValue?: Prisma.SortOrder
-  taxRate?: Prisma.SortOrder
-  taxValue?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   totalInWords?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  taxValue?: Prisma.SortOrder
+  taxRate?: Prisma.SortOrder
 }
 
 export type invoiceMinOrderByAggregateInput = {
@@ -624,22 +624,22 @@ export type invoiceMinOrderByAggregateInput = {
   subTotal?: Prisma.SortOrder
   discountRate?: Prisma.SortOrder
   discountValue?: Prisma.SortOrder
-  taxRate?: Prisma.SortOrder
-  taxValue?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
   totalInWords?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  taxValue?: Prisma.SortOrder
+  taxRate?: Prisma.SortOrder
 }
 
 export type invoiceSumOrderByAggregateInput = {
   subTotal?: Prisma.SortOrder
   discountRate?: Prisma.SortOrder
   discountValue?: Prisma.SortOrder
-  taxRate?: Prisma.SortOrder
-  taxValue?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
+  taxValue?: Prisma.SortOrder
+  taxRate?: Prisma.SortOrder
 }
 
 export type InvoiceScalarRelationFilter = {
@@ -769,13 +769,13 @@ export type invoiceCreateWithoutCompanyInput = {
   subTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: number
   discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: number
-  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: number
   items?: Prisma.InvoiceItemCreateNestedManyWithoutInvoiceInput
   customer: Prisma.CustomerCreateNestedOneWithoutInvoicesInput
 }
@@ -789,13 +789,13 @@ export type invoiceUncheckedCreateWithoutCompanyInput = {
   subTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: number
   discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: number
-  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: number
   items?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
 }
 
@@ -838,13 +838,13 @@ export type invoiceScalarWhereInput = {
   subTotal?: Prisma.DecimalFilter<"invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: Prisma.FloatFilter<"invoice"> | number
   discountValue?: Prisma.DecimalFilter<"invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: Prisma.FloatFilter<"invoice"> | number
-  taxValue?: Prisma.DecimalFilter<"invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFilter<"invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords?: Prisma.StringFilter<"invoice"> | string
   status?: Prisma.StringFilter<"invoice"> | string
   createdAt?: Prisma.DateTimeFilter<"invoice"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"invoice"> | Date | string
+  taxValue?: Prisma.DecimalFilter<"invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: Prisma.FloatFilter<"invoice"> | number
 }
 
 export type invoiceCreateWithoutCustomerInput = {
@@ -855,13 +855,13 @@ export type invoiceCreateWithoutCustomerInput = {
   subTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: number
   discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: number
-  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: number
   items?: Prisma.InvoiceItemCreateNestedManyWithoutInvoiceInput
   company: Prisma.CompanyCreateNestedOneWithoutInvoicesInput
 }
@@ -875,13 +875,13 @@ export type invoiceUncheckedCreateWithoutCustomerInput = {
   subTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: number
   discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: number
-  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: number
   items?: Prisma.InvoiceItemUncheckedCreateNestedManyWithoutInvoiceInput
 }
 
@@ -919,13 +919,13 @@ export type invoiceCreateWithoutItemsInput = {
   subTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: number
   discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: number
-  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: number
   company: Prisma.CompanyCreateNestedOneWithoutInvoicesInput
   customer: Prisma.CustomerCreateNestedOneWithoutInvoicesInput
 }
@@ -940,13 +940,13 @@ export type invoiceUncheckedCreateWithoutItemsInput = {
   subTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: number
   discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: number
-  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: number
 }
 
 export type invoiceCreateOrConnectWithoutItemsInput = {
@@ -973,13 +973,13 @@ export type invoiceUpdateWithoutItemsInput = {
   subTotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: Prisma.FloatFieldUpdateOperationsInput | number
   discountValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
   company?: Prisma.CompanyUpdateOneRequiredWithoutInvoicesNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutInvoicesNestedInput
 }
@@ -994,13 +994,13 @@ export type invoiceUncheckedUpdateWithoutItemsInput = {
   subTotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: Prisma.FloatFieldUpdateOperationsInput | number
   discountValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type invoiceCreateManyCompanyInput = {
@@ -1012,13 +1012,13 @@ export type invoiceCreateManyCompanyInput = {
   subTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: number
   discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: number
-  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: number
 }
 
 export type invoiceUpdateWithoutCompanyInput = {
@@ -1029,13 +1029,13 @@ export type invoiceUpdateWithoutCompanyInput = {
   subTotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: Prisma.FloatFieldUpdateOperationsInput | number
   discountValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
   items?: Prisma.InvoiceItemUpdateManyWithoutInvoiceNestedInput
   customer?: Prisma.CustomerUpdateOneRequiredWithoutInvoicesNestedInput
 }
@@ -1049,13 +1049,13 @@ export type invoiceUncheckedUpdateWithoutCompanyInput = {
   subTotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: Prisma.FloatFieldUpdateOperationsInput | number
   discountValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
   items?: Prisma.InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
 }
 
@@ -1068,13 +1068,13 @@ export type invoiceUncheckedUpdateManyWithoutCompanyInput = {
   subTotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: Prisma.FloatFieldUpdateOperationsInput | number
   discountValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type invoiceCreateManyCustomerInput = {
@@ -1086,13 +1086,13 @@ export type invoiceCreateManyCustomerInput = {
   subTotal?: runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: number
   discountValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: number
-  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords: string
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  taxValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: number
 }
 
 export type invoiceUpdateWithoutCustomerInput = {
@@ -1103,13 +1103,13 @@ export type invoiceUpdateWithoutCustomerInput = {
   subTotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: Prisma.FloatFieldUpdateOperationsInput | number
   discountValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
   items?: Prisma.InvoiceItemUpdateManyWithoutInvoiceNestedInput
   company?: Prisma.CompanyUpdateOneRequiredWithoutInvoicesNestedInput
 }
@@ -1123,13 +1123,13 @@ export type invoiceUncheckedUpdateWithoutCustomerInput = {
   subTotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: Prisma.FloatFieldUpdateOperationsInput | number
   discountValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
   items?: Prisma.InvoiceItemUncheckedUpdateManyWithoutInvoiceNestedInput
 }
 
@@ -1142,13 +1142,13 @@ export type invoiceUncheckedUpdateManyWithoutCustomerInput = {
   subTotal?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   discountRate?: Prisma.FloatFieldUpdateOperationsInput | number
   discountValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
-  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   totalInWords?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  taxValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  taxRate?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 
@@ -1192,13 +1192,13 @@ export type invoiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   subTotal?: boolean
   discountRate?: boolean
   discountValue?: boolean
-  taxRate?: boolean
-  taxValue?: boolean
   totalAmount?: boolean
   totalInWords?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  taxValue?: boolean
+  taxRate?: boolean
   items?: boolean | Prisma.invoice$itemsArgs<ExtArgs>
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
@@ -1215,13 +1215,13 @@ export type invoiceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   subTotal?: boolean
   discountRate?: boolean
   discountValue?: boolean
-  taxRate?: boolean
-  taxValue?: boolean
   totalAmount?: boolean
   totalInWords?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  taxValue?: boolean
+  taxRate?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["invoice"]>
@@ -1236,13 +1236,13 @@ export type invoiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   subTotal?: boolean
   discountRate?: boolean
   discountValue?: boolean
-  taxRate?: boolean
-  taxValue?: boolean
   totalAmount?: boolean
   totalInWords?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  taxValue?: boolean
+  taxRate?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.CustomerDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["invoice"]>
@@ -1257,16 +1257,16 @@ export type invoiceSelectScalar = {
   subTotal?: boolean
   discountRate?: boolean
   discountValue?: boolean
-  taxRate?: boolean
-  taxValue?: boolean
   totalAmount?: boolean
   totalInWords?: boolean
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  taxValue?: boolean
+  taxRate?: boolean
 }
 
-export type invoiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "invoiceNumber" | "issuedAt" | "dueDate" | "companyId" | "customerId" | "subTotal" | "discountRate" | "discountValue" | "taxRate" | "taxValue" | "totalAmount" | "totalInWords" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
+export type invoiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "invoiceNumber" | "issuedAt" | "dueDate" | "companyId" | "customerId" | "subTotal" | "discountRate" | "discountValue" | "totalAmount" | "totalInWords" | "status" | "createdAt" | "updatedAt" | "taxValue" | "taxRate", ExtArgs["result"]["invoice"]>
 export type invoiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   items?: boolean | Prisma.invoice$itemsArgs<ExtArgs>
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
@@ -1299,13 +1299,13 @@ export type $invoicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     subTotal: runtime.Decimal
     discountRate: number
     discountValue: runtime.Decimal
-    taxRate: number
-    taxValue: runtime.Decimal
     totalAmount: runtime.Decimal
     totalInWords: string
     status: string
     createdAt: Date
     updatedAt: Date
+    taxValue: runtime.Decimal
+    taxRate: number
   }, ExtArgs["result"]["invoice"]>
   composites: {}
 }
@@ -1741,13 +1741,13 @@ export interface invoiceFieldRefs {
   readonly subTotal: Prisma.FieldRef<"invoice", 'Decimal'>
   readonly discountRate: Prisma.FieldRef<"invoice", 'Float'>
   readonly discountValue: Prisma.FieldRef<"invoice", 'Decimal'>
-  readonly taxRate: Prisma.FieldRef<"invoice", 'Float'>
-  readonly taxValue: Prisma.FieldRef<"invoice", 'Decimal'>
   readonly totalAmount: Prisma.FieldRef<"invoice", 'Decimal'>
   readonly totalInWords: Prisma.FieldRef<"invoice", 'String'>
   readonly status: Prisma.FieldRef<"invoice", 'String'>
   readonly createdAt: Prisma.FieldRef<"invoice", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"invoice", 'DateTime'>
+  readonly taxValue: Prisma.FieldRef<"invoice", 'Decimal'>
+  readonly taxRate: Prisma.FieldRef<"invoice", 'Float'>
 }
     
 
