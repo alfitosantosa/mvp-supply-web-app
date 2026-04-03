@@ -246,8 +246,9 @@ const S = StyleSheet.create({
 
 function InvoiceDocument({ invoice }: { invoice: InvoicePDFData }) {
   const items = invoice.items ?? [];
-  const tax = invoice.totalAmount * 0.11;
-  const grandTotal = Math.round(invoice.totalAmount * 1.11);
+  const taxRate = invoice.taxRate ?? 11;
+  const taxValue = invoice.taxValue ?? invoice.totalAmount * (taxRate / 100);
+  const grandTotal = Math.round(invoice.totalAmount);
 
   return (
     <Document>
@@ -374,8 +375,8 @@ function InvoiceDocument({ invoice }: { invoice: InvoicePDFData }) {
               </View>
             )}
             <View style={S.totalLine}>
-              <Text style={S.totalLbl}>PPN (11%)</Text>
-              <Text style={S.totalVal}>{fmt(tax)}</Text>
+              <Text style={S.totalLbl}>PPN ({taxRate}%)</Text>
+              <Text style={S.totalVal}>{fmt(taxValue)}</Text>
             </View>
             <View style={S.totalDivider} />
             <View style={S.grandRow}>

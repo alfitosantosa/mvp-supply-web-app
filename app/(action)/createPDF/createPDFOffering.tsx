@@ -20,6 +20,8 @@ export type OfferingPDFData = {
   subTotal: number;
   discountRate: number;
   discountValue: number;
+  taxRate: number;
+  taxValue: number;
   totalAmount: number;
   totalInWords: string;
   company?: {
@@ -234,8 +236,9 @@ const S = StyleSheet.create({
 
 function OfferingDocument({ offering }: { offering: OfferingPDFData }) {
   const items = offering.items ?? [];
-  const tax = offering.totalAmount * 0.11;
-  const grandTotal = Math.round(offering.totalAmount * 1.11);
+  const taxRate = offering.taxRate ?? 11;
+  const taxValue = offering.taxValue ?? offering.totalAmount * (taxRate / 100);
+  const grandTotal = Math.round(offering.totalAmount);
 
   return (
     <Document>
@@ -369,8 +372,8 @@ function OfferingDocument({ offering }: { offering: OfferingPDFData }) {
               </View>
             )}
             <View style={S.totalLine}>
-              <Text style={S.totalLbl}>PPN (11%)</Text>
-              <Text style={S.totalVal}>{fmt(tax)}</Text>
+              <Text style={S.totalLbl}>PPN ({taxRate}%)</Text>
+              <Text style={S.totalVal}>{fmt(taxValue)}</Text>
             </View>
             <View style={S.totalDivider} />
             <View style={S.grandRow}>

@@ -17,6 +17,11 @@ export type TravelDocsPDFData = {
   issuedAt: string;
   dueDate: string;
   status: string;
+  subTotal: number;
+  discountRate: number;
+  discountValue: number;
+  taxRate: number;
+  taxValue: number;
   totalAmount: number;
   totalInWords: string;
   company?: {
@@ -227,8 +232,9 @@ const S = StyleSheet.create({
 
 function TravelDocsDocument({ data }: { data: TravelDocsPDFData }) {
   const items = data.items ?? [];
-  const tax = data.totalAmount * 0.11;
-  const grandTotal = Math.round(data.totalAmount * 1.11);
+  const taxRate = data.taxRate ?? 11;
+  const taxValue = data.taxValue ?? data.totalAmount * (taxRate / 100);
+  const grandTotal = Math.round(data.totalAmount);
 
   return (
     <Document>
