@@ -116,6 +116,8 @@ model invoice {
   subTotal      Decimal       @default(0)
   discountRate  Float         @default(0)
   discountValue Decimal       @default(0)
+  taxRate       Float         @default(0)
+  taxValue      Decimal       @default(0)
   totalAmount   Decimal       @default(0)
   totalInWords  String
   status        String        @default("DRAFT")

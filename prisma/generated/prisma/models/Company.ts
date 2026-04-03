@@ -9,8 +9,8 @@
  * 🟢 You can import this file directly.
  */
 import type * as runtime from "@prisma/client/runtime/client"
-import type * as $Enums from "../enums"
-import type * as Prisma from "../internal/prismaNamespace"
+import type * as $Enums from "../enums.js"
+import type * as Prisma from "../internal/prismaNamespace.js"
 
 /**
  * Model Company
@@ -35,9 +35,9 @@ export type CompanyMinAggregateOutputType = {
   bankAccount: string | null
   senderName: string | null
   senderTitle: string | null
-  imageUrl: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  imageUrl: string | null
 }
 
 export type CompanyMaxAggregateOutputType = {
@@ -51,9 +51,9 @@ export type CompanyMaxAggregateOutputType = {
   bankAccount: string | null
   senderName: string | null
   senderTitle: string | null
-  imageUrl: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  imageUrl: string | null
 }
 
 export type CompanyCountAggregateOutputType = {
@@ -67,9 +67,9 @@ export type CompanyCountAggregateOutputType = {
   bankAccount: number
   senderName: number
   senderTitle: number
-  imageUrl: number
   createdAt: number
   updatedAt: number
+  imageUrl: number
   _all: number
 }
 
@@ -85,9 +85,9 @@ export type CompanyMinAggregateInputType = {
   bankAccount?: true
   senderName?: true
   senderTitle?: true
-  imageUrl?: true
   createdAt?: true
   updatedAt?: true
+  imageUrl?: true
 }
 
 export type CompanyMaxAggregateInputType = {
@@ -101,9 +101,9 @@ export type CompanyMaxAggregateInputType = {
   bankAccount?: true
   senderName?: true
   senderTitle?: true
-  imageUrl?: true
   createdAt?: true
   updatedAt?: true
+  imageUrl?: true
 }
 
 export type CompanyCountAggregateInputType = {
@@ -117,9 +117,9 @@ export type CompanyCountAggregateInputType = {
   bankAccount?: true
   senderName?: true
   senderTitle?: true
-  imageUrl?: true
   createdAt?: true
   updatedAt?: true
+  imageUrl?: true
   _all?: true
 }
 
@@ -206,9 +206,9 @@ export type CompanyGroupByOutputType = {
   bankAccount: string
   senderName: string
   senderTitle: string
-  imageUrl: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  imageUrl: string | null
   _count: CompanyCountAggregateOutputType | null
   _min: CompanyMinAggregateOutputType | null
   _max: CompanyMaxAggregateOutputType | null
@@ -243,9 +243,9 @@ export type CompanyWhereInput = {
   bankAccount?: Prisma.StringFilter<"Company"> | string
   senderName?: Prisma.StringFilter<"Company"> | string
   senderTitle?: Prisma.StringFilter<"Company"> | string
-  imageUrl?: Prisma.StringNullableFilter<"Company"> | string | null
   createdAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
   updatedAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
+  imageUrl?: Prisma.StringNullableFilter<"Company"> | string | null
   invoices?: Prisma.InvoiceListRelationFilter
 }
 
@@ -260,9 +260,9 @@ export type CompanyOrderByWithRelationInput = {
   bankAccount?: Prisma.SortOrder
   senderName?: Prisma.SortOrder
   senderTitle?: Prisma.SortOrder
-  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   invoices?: Prisma.invoiceOrderByRelationAggregateInput
 }
 
@@ -280,9 +280,9 @@ export type CompanyWhereUniqueInput = Prisma.AtLeast<{
   bankAccount?: Prisma.StringFilter<"Company"> | string
   senderName?: Prisma.StringFilter<"Company"> | string
   senderTitle?: Prisma.StringFilter<"Company"> | string
-  imageUrl?: Prisma.StringNullableFilter<"Company"> | string | null
   createdAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
   updatedAt?: Prisma.DateTimeNullableFilter<"Company"> | Date | string | null
+  imageUrl?: Prisma.StringNullableFilter<"Company"> | string | null
   invoices?: Prisma.InvoiceListRelationFilter
 }, "id">
 
@@ -297,9 +297,9 @@ export type CompanyOrderByWithAggregationInput = {
   bankAccount?: Prisma.SortOrder
   senderName?: Prisma.SortOrder
   senderTitle?: Prisma.SortOrder
-  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.CompanyCountOrderByAggregateInput
   _max?: Prisma.CompanyMaxOrderByAggregateInput
   _min?: Prisma.CompanyMinOrderByAggregateInput
@@ -319,9 +319,9 @@ export type CompanyScalarWhereWithAggregatesInput = {
   bankAccount?: Prisma.StringWithAggregatesFilter<"Company"> | string
   senderName?: Prisma.StringWithAggregatesFilter<"Company"> | string
   senderTitle?: Prisma.StringWithAggregatesFilter<"Company"> | string
-  imageUrl?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
   createdAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Company"> | Date | string | null
   updatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Company"> | Date | string | null
+  imageUrl?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
 }
 
 export type CompanyCreateInput = {
@@ -335,9 +335,9 @@ export type CompanyCreateInput = {
   bankAccount: string
   senderName: string
   senderTitle: string
-  imageUrl?: string | null
   createdAt?: Date | string | null
   updatedAt?: Date | string | null
+  imageUrl?: string | null
   invoices?: Prisma.invoiceCreateNestedManyWithoutCompanyInput
 }
 
@@ -352,9 +352,9 @@ export type CompanyUncheckedCreateInput = {
   bankAccount: string
   senderName: string
   senderTitle: string
-  imageUrl?: string | null
   createdAt?: Date | string | null
   updatedAt?: Date | string | null
+  imageUrl?: string | null
   invoices?: Prisma.invoiceUncheckedCreateNestedManyWithoutCompanyInput
 }
 
@@ -369,9 +369,9 @@ export type CompanyUpdateInput = {
   bankAccount?: Prisma.StringFieldUpdateOperationsInput | string
   senderName?: Prisma.StringFieldUpdateOperationsInput | string
   senderTitle?: Prisma.StringFieldUpdateOperationsInput | string
-  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoices?: Prisma.invoiceUpdateManyWithoutCompanyNestedInput
 }
 
@@ -386,9 +386,9 @@ export type CompanyUncheckedUpdateInput = {
   bankAccount?: Prisma.StringFieldUpdateOperationsInput | string
   senderName?: Prisma.StringFieldUpdateOperationsInput | string
   senderTitle?: Prisma.StringFieldUpdateOperationsInput | string
-  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   invoices?: Prisma.invoiceUncheckedUpdateManyWithoutCompanyNestedInput
 }
 
@@ -403,9 +403,9 @@ export type CompanyCreateManyInput = {
   bankAccount: string
   senderName: string
   senderTitle: string
-  imageUrl?: string | null
   createdAt?: Date | string | null
   updatedAt?: Date | string | null
+  imageUrl?: string | null
 }
 
 export type CompanyUpdateManyMutationInput = {
@@ -419,9 +419,9 @@ export type CompanyUpdateManyMutationInput = {
   bankAccount?: Prisma.StringFieldUpdateOperationsInput | string
   senderName?: Prisma.StringFieldUpdateOperationsInput | string
   senderTitle?: Prisma.StringFieldUpdateOperationsInput | string
-  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CompanyUncheckedUpdateManyInput = {
@@ -435,9 +435,9 @@ export type CompanyUncheckedUpdateManyInput = {
   bankAccount?: Prisma.StringFieldUpdateOperationsInput | string
   senderName?: Prisma.StringFieldUpdateOperationsInput | string
   senderTitle?: Prisma.StringFieldUpdateOperationsInput | string
-  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CompanyCountOrderByAggregateInput = {
@@ -451,9 +451,9 @@ export type CompanyCountOrderByAggregateInput = {
   bankAccount?: Prisma.SortOrder
   senderName?: Prisma.SortOrder
   senderTitle?: Prisma.SortOrder
-  imageUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
 }
 
 export type CompanyMaxOrderByAggregateInput = {
@@ -467,9 +467,9 @@ export type CompanyMaxOrderByAggregateInput = {
   bankAccount?: Prisma.SortOrder
   senderName?: Prisma.SortOrder
   senderTitle?: Prisma.SortOrder
-  imageUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
 }
 
 export type CompanyMinOrderByAggregateInput = {
@@ -483,9 +483,9 @@ export type CompanyMinOrderByAggregateInput = {
   bankAccount?: Prisma.SortOrder
   senderName?: Prisma.SortOrder
   senderTitle?: Prisma.SortOrder
-  imageUrl?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  imageUrl?: Prisma.SortOrder
 }
 
 export type CompanyScalarRelationFilter = {
@@ -518,9 +518,9 @@ export type CompanyCreateWithoutInvoicesInput = {
   bankAccount: string
   senderName: string
   senderTitle: string
-  imageUrl?: string | null
   createdAt?: Date | string | null
   updatedAt?: Date | string | null
+  imageUrl?: string | null
 }
 
 export type CompanyUncheckedCreateWithoutInvoicesInput = {
@@ -534,9 +534,9 @@ export type CompanyUncheckedCreateWithoutInvoicesInput = {
   bankAccount: string
   senderName: string
   senderTitle: string
-  imageUrl?: string | null
   createdAt?: Date | string | null
   updatedAt?: Date | string | null
+  imageUrl?: string | null
 }
 
 export type CompanyCreateOrConnectWithoutInvoicesInput = {
@@ -566,9 +566,9 @@ export type CompanyUpdateWithoutInvoicesInput = {
   bankAccount?: Prisma.StringFieldUpdateOperationsInput | string
   senderName?: Prisma.StringFieldUpdateOperationsInput | string
   senderTitle?: Prisma.StringFieldUpdateOperationsInput | string
-  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CompanyUncheckedUpdateWithoutInvoicesInput = {
@@ -582,9 +582,9 @@ export type CompanyUncheckedUpdateWithoutInvoicesInput = {
   bankAccount?: Prisma.StringFieldUpdateOperationsInput | string
   senderName?: Prisma.StringFieldUpdateOperationsInput | string
   senderTitle?: Prisma.StringFieldUpdateOperationsInput | string
-  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -629,9 +629,9 @@ export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   bankAccount?: boolean
   senderName?: boolean
   senderTitle?: boolean
-  imageUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  imageUrl?: boolean
   invoices?: boolean | Prisma.Company$invoicesArgs<ExtArgs>
   _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["company"]>
@@ -647,9 +647,9 @@ export type CompanySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   bankAccount?: boolean
   senderName?: boolean
   senderTitle?: boolean
-  imageUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  imageUrl?: boolean
 }, ExtArgs["result"]["company"]>
 
 export type CompanySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -663,9 +663,9 @@ export type CompanySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   bankAccount?: boolean
   senderName?: boolean
   senderTitle?: boolean
-  imageUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  imageUrl?: boolean
 }, ExtArgs["result"]["company"]>
 
 export type CompanySelectScalar = {
@@ -679,12 +679,12 @@ export type CompanySelectScalar = {
   bankAccount?: boolean
   senderName?: boolean
   senderTitle?: boolean
-  imageUrl?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  imageUrl?: boolean
 }
 
-export type CompanyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "brandName" | "address" | "email" | "phone" | "bankName" | "bankAccount" | "senderName" | "senderTitle" | "imageUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
+export type CompanyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "brandName" | "address" | "email" | "phone" | "bankName" | "bankAccount" | "senderName" | "senderTitle" | "createdAt" | "updatedAt" | "imageUrl", ExtArgs["result"]["company"]>
 export type CompanyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   invoices?: boolean | Prisma.Company$invoicesArgs<ExtArgs>
   _count?: boolean | Prisma.CompanyCountOutputTypeDefaultArgs<ExtArgs>
@@ -708,9 +708,9 @@ export type $CompanyPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     bankAccount: string
     senderName: string
     senderTitle: string
-    imageUrl: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    imageUrl: string | null
   }, ExtArgs["result"]["company"]>
   composites: {}
 }
@@ -1145,9 +1145,9 @@ export interface CompanyFieldRefs {
   readonly bankAccount: Prisma.FieldRef<"Company", 'String'>
   readonly senderName: Prisma.FieldRef<"Company", 'String'>
   readonly senderTitle: Prisma.FieldRef<"Company", 'String'>
-  readonly imageUrl: Prisma.FieldRef<"Company", 'String'>
   readonly createdAt: Prisma.FieldRef<"Company", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Company", 'DateTime'>
+  readonly imageUrl: Prisma.FieldRef<"Company", 'String'>
 }
     
 

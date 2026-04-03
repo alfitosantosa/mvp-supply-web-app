@@ -139,6 +139,8 @@ export type InvoiceData = {
   subTotal: number;
   discountRate: number;
   discountValue: number;
+  taxRate: number;
+  taxValue: number;
   totalAmount: number;
   totalInWords: string;
   status: string;
@@ -268,6 +270,7 @@ const invoiceSchema = z.object({
   companyId: z.string().min(1, "Perusahaan wajib dipilih"),
   customerId: z.string().min(1, "Pelanggan wajib dipilih"),
   discountRate: z.number().min(0).max(100),
+  taxRate: z.number().min(0).max(100),
   status: z.string().min(1, "Status wajib dipilih"),
   items: z.array(invoiceItemSchema).min(1, "Minimal satu item invoice"),
 });
@@ -333,6 +336,7 @@ function InvoiceFormDialog({
       companyId: "",
       customerId: "",
       discountRate: 0,
+      taxRate: 11,
       status: "DRAFT",
       items: [
         {
@@ -352,6 +356,7 @@ function InvoiceFormDialog({
 
   const watchedItems = watch("items");
   const watchedDiscount = watch("discountRate");
+  const watchedTaxRate = watch("taxRate");
 
   // Computed totals
   const subTotal = React.useMemo(
@@ -362,7 +367,12 @@ function InvoiceFormDialog({
     () => (subTotal * (watchedDiscount || 0)) / 100,
     [subTotal, watchedDiscount],
   );
-  const totalAmount = subTotal - discountValue;
+  const afterDiscount = subTotal - discountValue;
+  const taxValue = React.useMemo(
+    () => (afterDiscount * (watchedTaxRate || 0)) / 100,
+    [afterDiscount, watchedTaxRate],
+  );
+  const totalAmount = afterDiscount + taxValue;
 
   // Auto-populate price when product selected
   const handleProductChange = (index: number, productId: string) => {
@@ -400,6 +410,7 @@ function InvoiceFormDialog({
         companyId: editData.companyId,
         customerId: editData.customerId,
         discountRate: editData.discountRate,
+        taxRate: editData.taxRate ?? 11,
         status: editData.status,
         items: editData.items?.length
           ? editData.items.map((item) => ({
@@ -431,6 +442,7 @@ function InvoiceFormDialog({
         companyId: "",
         customerId: "",
         discountRate: 0,
+        taxRate: 11,
         status: "DRAFT",
         items: [
           {
@@ -458,6 +470,8 @@ function InvoiceFormDialog({
         subTotal,
         discountRate: data.discountRate,
         discountValue,
+        taxRate: data.taxRate,
+        taxValue,
         totalAmount,
         totalInWords: toTerbilang(totalAmount),
         status: data.status,
@@ -816,6 +830,25 @@ function InvoiceFormDialog({
               </div>
               <span className="text-sm font-medium text-red-500">
                 -{formatCurrency(discountValue)}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">PPN</span>
+                <div className="relative w-20">
+                  <Input
+                    type="number"
+                    min={0}
+                    max={100}
+                    className="h-7 text-xs pr-6"
+                    {...register("taxRate", { valueAsNumber: true })}
+                  />
+                  <Percent className="absolute right-1.5 top-1.5 h-3 w-3 text-muted-foreground" />
+                </div>
+              </div>
+              <span className="text-sm font-medium text-blue-500">
+                +{formatCurrency(taxValue)}
               </span>
             </div>
 

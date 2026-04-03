@@ -14,6 +14,8 @@ export interface InvoiceForm {
   subTotal: number;
   discountRate: number;
   discountValue: number;
+  taxRate: number;
+  taxValue: number;
   totalAmount: number;
   totalInWords: string;
   status: string;

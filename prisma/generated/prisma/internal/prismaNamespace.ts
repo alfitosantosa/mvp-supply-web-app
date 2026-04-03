@@ -16,10 +16,10 @@
  */
 
 import * as runtime from "@prisma/client/runtime/client"
-import type * as Prisma from "../models"
-import { type PrismaClient } from "./class"
+import type * as Prisma from "../models.js"
+import { type PrismaClient } from "./class.js"
 
-export type * from '../models'
+export type * from '../models.js'
 
 export type DMMF = typeof runtime.DMMF
 
@@ -1192,9 +1192,9 @@ export const CompanyScalarFieldEnum = {
   bankAccount: 'bankAccount',
   senderName: 'senderName',
   senderTitle: 'senderTitle',
-  imageUrl: 'imageUrl',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  imageUrl: 'imageUrl'
 } as const
 
 export type CompanyScalarFieldEnum = (typeof CompanyScalarFieldEnum)[keyof typeof CompanyScalarFieldEnum]
@@ -1204,10 +1204,10 @@ export const CustomerScalarFieldEnum = {
   id: 'id',
   name: 'name',
   address: 'address',
-  imageUrl: 'imageUrl',
   phone: 'phone',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  imageUrl: 'imageUrl'
 } as const
 
 export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
@@ -1223,6 +1223,8 @@ export const InvoiceScalarFieldEnum = {
   subTotal: 'subTotal',
   discountRate: 'discountRate',
   discountValue: 'discountValue',
+  taxRate: 'taxRate',
+  taxValue: 'taxValue',
   totalAmount: 'totalAmount',
   totalInWords: 'totalInWords',
   status: 'status',
@@ -1237,13 +1239,14 @@ export const InvoiceItemScalarFieldEnum = {
   id: 'id',
   invoiceId: 'invoiceId',
   productId: 'productId',
-  imageUrl: 'imageUrl',
   description: 'description',
   price: 'price',
   quantity: 'quantity',
   total: 'total',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  imageUrl: 'imageUrl',
+  productName: 'productName'
 } as const
 
 export type InvoiceItemScalarFieldEnum = (typeof InvoiceItemScalarFieldEnum)[keyof typeof InvoiceItemScalarFieldEnum]
@@ -1254,11 +1257,11 @@ export const ProductScalarFieldEnum = {
   name: 'name',
   price: 'price',
   description: 'description',
-  imageUrl: 'imageUrl',
-  stock: 'stock',
-  total: 'total',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  stock: 'stock',
+  imageUrl: 'imageUrl',
+  total: 'total'
 } as const
 
 export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]

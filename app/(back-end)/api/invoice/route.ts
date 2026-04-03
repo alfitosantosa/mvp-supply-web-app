@@ -8,6 +8,7 @@
 //   subTotal      Decimal   @default(0)
 //   discountRate  Float     @default(0)
 //   discountValue Decimal   @default(0)
+//   taxRate       Float     @default(0)
 //   totalAmount   Decimal   @default(0)
 //   totalInWords  String
 //   status        String    @default("DRAFT")
@@ -94,6 +95,8 @@ export async function POST(request: NextRequest) {
       subTotal,
       discountRate,
       discountValue,
+      taxRate,
+      taxValue,
       totalAmount,
       totalInWords,
       status,
@@ -109,6 +112,8 @@ export async function POST(request: NextRequest) {
         subTotal,
         discountRate,
         discountValue,
+        taxRate,
+        taxValue,
         totalAmount,
         totalInWords,
         status,
@@ -133,15 +138,15 @@ export async function PUT(request: NextRequest) {
     subTotal,
     discountRate,
     discountValue,
+    taxRate,
+    taxValue,
     totalAmount,
     totalInWords,
     status,
   } = await request.json();
   try {
     const createInvoice = await prisma.invoice.update({
-      where: {
-        id,
-      },
+      where: { id },
       data: {
         invoiceNumber,
         issuedAt,
@@ -151,6 +156,8 @@ export async function PUT(request: NextRequest) {
         subTotal,
         discountRate,
         discountValue,
+        taxRate,
+        taxValue,
         totalAmount,
         totalInWords,
         status,
@@ -160,7 +167,7 @@ export async function PUT(request: NextRequest) {
   } catch (Error) {
     return new Response(`Failed to update ${Error}`);
   } finally {
-    await prisma.$disconnect;
+    await prisma.$disconnect();
   }
 }
 

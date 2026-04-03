@@ -8,13 +8,13 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/User'
-export type * from './models/Session'
-export type * from './models/Account'
-export type * from './models/Verification'
-export type * from './models/Company'
-export type * from './models/Customer'
-export type * from './models/invoice'
-export type * from './models/InvoiceItem'
-export type * from './models/Product'
-export type * from './commonInputTypes'
+export type * from './models/User.js'
+export type * from './models/Session.js'
+export type * from './models/Account.js'
+export type * from './models/Verification.js'
+export type * from './models/Company.js'
+export type * from './models/Customer.js'
+export type * from './models/invoice.js'
+export type * from './models/InvoiceItem.js'
+export type * from './models/Product.js'
+export type * from './commonInputTypes.js'

@@ -20,6 +20,8 @@ export type InvoicePDFData = {
   subTotal: number;
   discountRate: number;
   discountValue: number;
+  taxRate: number;
+  taxValue: number;
   totalAmount: number;
   totalInWords: string;
   company?: {
