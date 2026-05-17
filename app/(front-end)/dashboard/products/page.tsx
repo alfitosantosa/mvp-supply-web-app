@@ -102,7 +102,7 @@ export type ProductData = {
 
 const productSchema = z.object({
   name: z.string().min(1, "Nama produk wajib diisi"),
-  imageUrl: z.string().min(1, "Foto produk wajib diisi"),
+  imageUrl: z.string().optional(),
   price: z.coerce.number().min(0, "Harga tidak boleh negatif"),
   description: z.string().optional(),
   stock: z.coerce.number().int().min(0, "Stok tidak boleh negatif"),

@@ -13,6 +13,16 @@ import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "@/lib/auth-client";
 import Image from "next/image";
 import Logo from "@/public/logo.png";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar } from "./ui/avatar";
 
 export default function Navbar() {
   const router = useRouter();
@@ -105,41 +115,30 @@ export default function Navbar() {
         </Select>
 
         {/* User Menu / Logout Select */}
-        <Select onValueChange={handleUserAction}>
-          <SelectTrigger className="w-40 bg-black text-white border-white ml-4">
-            <SelectValue
-              className="text-white"
-              placeholder={
-                session.user.image && (
-                  <Image
-                    width={20}
-                    height={20}
-                    src={session.user.image}
-                    alt="User avatar"
-                  />
-                )
-              }
-            />
-          </SelectTrigger>
-
-          <SelectContent className="bg-black text-white border border-gray-700">
-            <SelectGroup>
-              <SelectItem
-                value="profile"
-                className="cursor-pointer hover:bg-gray-800"
-              >
-                Profile
-              </SelectItem>
-
-              <SelectItem
-                value="logout"
-                className="cursor-pointer text-red-400 hover:bg-gray-800"
-              >
-                Logout
-              </SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Avatar className="w-10 h-10">
+              <Image
+                src={session.user.image}
+                alt={session.user.name}
+                width={40}
+                height={40}
+              />
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem>User Admin</DropdownMenuItem>
+              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => signOut()}>
+                Log out
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </nav>
   );

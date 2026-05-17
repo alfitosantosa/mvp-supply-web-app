@@ -343,7 +343,7 @@ function TravelDocsDocument({ data }: { data: TravelDocsPDFData }) {
           ))}
 
           {/* Totals */}
-          <View style={S.totalsWrap}>
+          {/* <View style={S.totalsWrap}>
             <View style={S.totalLine}>
               <Text style={S.totalLbl}>Subtotal</Text>
               <Text style={S.totalVal}>{fmt(data.subTotal)}</Text>
@@ -363,7 +363,7 @@ function TravelDocsDocument({ data }: { data: TravelDocsPDFData }) {
               <Text style={S.grandLbl}>TOTAL</Text>
               <Text style={S.grandVal}>{fmt(grandTotal)}</Text>
             </View>
-          </View>
+          </View> */}
 
           {/* Notes */}
           <View style={S.notesBox}>
