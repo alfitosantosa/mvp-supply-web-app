@@ -316,7 +316,9 @@ function InvoiceDocument({ invoice }: { invoice: InvoicePDFData }) {
           <View style={S.partiesRow}>
             <View style={S.partyBox}>
               <Text style={S.partyLabel}>Dari</Text>
-              <Text style={S.partyName}>{invoice.company?.name ?? "-"}</Text>
+              <Text style={S.partyName}>
+                {invoice.company?.brandName ?? invoice.company?.name ?? "-"}
+              </Text>
               <Text style={S.partyInfo}>
                 {[
                   invoice.company?.address,
@@ -392,7 +394,7 @@ function InvoiceDocument({ invoice }: { invoice: InvoicePDFData }) {
             <View style={S.bankBox}>
               <Text style={S.bankTitle}>Informasi Pembayaran</Text>
               <Text style={S.bankInfo}>
-                {`Bank        : ${invoice.company?.bankName ?? "-"}\nNo. Rek  : ${invoice.company?.bankAccount ?? "-"}\nA/N          : ${invoice.company?.senderName ?? "-"}`}
+                {`Bank        : ${invoice.company?.bankName ?? "-"}\nNo. Rek  : ${invoice.company?.bankAccount ?? "-"}\nA/N          : ${invoice.company?.name ?? "-"}`}
               </Text>
             </View>
             <View style={S.sigBox}>

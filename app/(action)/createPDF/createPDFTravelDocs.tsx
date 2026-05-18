@@ -414,3 +414,4 @@ export async function createPDFTravelDocs(data: TravelDocsPDFData) {
   a.click();
   URL.revokeObjectURL(url);
 }
+                                      
