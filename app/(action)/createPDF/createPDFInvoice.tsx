@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import {
   Document,
   Page,
@@ -93,7 +92,7 @@ const S = StyleSheet.create({
     paddingHorizontal: 32,
     paddingVertical: 14,
   },
-  appLogo: { width: 36, height: 36, objectFit: "contain" },
+  appLogo: { width: 60, height: 60, objectFit: "contain" },
   companyLogoWrap: { alignItems: "flex-end" },
   companyLogo: { width: 44, height: 44, objectFit: "contain" },
   docTypeLabel: {
@@ -238,6 +237,7 @@ const S = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#999",
     width: 120,
+    paddingBottom: 50,
     marginBottom: 4,
   },
   sigName: { fontSize: 8, fontFamily: "Helvetica-Bold" },
@@ -394,7 +394,7 @@ function InvoiceDocument({ invoice }: { invoice: InvoicePDFData }) {
             <View style={S.bankBox}>
               <Text style={S.bankTitle}>Informasi Pembayaran</Text>
               <Text style={S.bankInfo}>
-                {`Bank        : ${invoice.company?.bankName ?? "-"}\nNo. Rek  : ${invoice.company?.bankAccount ?? "-"}\nA/N          : ${invoice.company?.name ?? "-"}`}
+                {`Bank        : ${invoice.company?.bankName ?? "-"}\nNo. Rek   : ${invoice.company?.bankAccount ?? "-"}\nA/N          : ${invoice.company?.name ?? "-"}`}
               </Text>
             </View>
             <View style={S.sigBox}>
