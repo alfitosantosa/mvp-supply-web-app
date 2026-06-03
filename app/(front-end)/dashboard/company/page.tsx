@@ -82,6 +82,8 @@ import {
   useUpdateCompany,
   useDeleteCompany,
 } from "@/app/(hooks)/hooks/company/useCompany";
+import { useSession } from "@/lib/auth-client";
+import { unauthorized } from "next/navigation";
 
 // Type definition
 export type CompanyData = {
@@ -406,7 +408,7 @@ function DeleteCompanyDialog({
 }
 
 // Main DataTable Component
-export default function CompanyDataTable() {
+function CompanyDataTableUI() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -946,4 +948,14 @@ export default function CompanyDataTable() {
       </div>
     </>
   );
+}
+
+export default function CompanyDataTable() {
+  const session = useSession();
+
+  if (!session.data) {
+    unauthorized();
+  }
+
+  return <CompanyDataTableUI />;
 }

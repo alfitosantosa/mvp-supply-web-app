@@ -84,6 +84,8 @@ import {
   useUpdateCustomer,
   useDeleteCustomer,
 } from "@/app/(hooks)/hooks/customer/useCustomer";
+import { useSession } from "@/lib/auth-client";
+import { unauthorized } from "next/navigation";
 
 // Type definitions
 export type CustomerData = {
@@ -514,7 +516,7 @@ function DeleteCustomerDialog({
 }
 
 // Main DataTable Component
-export default function CustomerDataTable() {
+function CustomerDataTableUI() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -1035,4 +1037,14 @@ export default function CustomerDataTable() {
       </div>
     </>
   );
+}
+
+export default function CustomerPage() {
+  const session = useSession();
+  console.log(session);
+
+  if (!session.data) {
+    unauthorized();
+  }
+  return <CustomerDataTableUI />;
 }

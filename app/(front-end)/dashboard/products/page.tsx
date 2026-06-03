@@ -83,6 +83,8 @@ import {
   useUpdateProduct,
 } from "@/app/(hooks)/hooks/product/useProduct";
 import Image from "next/image";
+import { unauthorized } from "next/navigation";
+import { useSession } from "@/lib/auth-client";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -545,7 +547,7 @@ function DeleteProductDialog({
 
 // ─── Main DataTable ───────────────────────────────────────────────────────────
 
-export default function ProductDataTable() {
+function ProductDataTableUI() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -1038,4 +1040,16 @@ export default function ProductDataTable() {
       />
     </div>
   );
+}
+
+export default function ProductDataTable() {
+  //check session
+  const session = useSession();
+  console.log(session);
+
+  if (!session.data) {
+    unauthorized();
+  }
+
+  return <ProductDataTableUI />;
 }

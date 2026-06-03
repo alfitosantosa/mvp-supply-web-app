@@ -55,6 +55,9 @@ export default function Navbar() {
       router.push("/auth/sign-in");
       await signOut();
     }
+    if (value === "useradmin") {
+      router.push("/dashboard/users");
+    }
   };
 
   // Loading state — render struktur yang sama agar tidak hydration mismatch
@@ -129,11 +132,15 @@ export default function Navbar() {
           <DropdownMenuContent>
             <DropdownMenuGroup>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>User Admin</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleUserAction("profile")}>
+                Profile
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleUserAction("useradmin")}>
+                User Admin
+              </DropdownMenuItem>
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => signOut()}>
+              <DropdownMenuItem onClick={() => handleUserAction("logout")}>
                 Log out
               </DropdownMenuItem>
             </DropdownMenuGroup>

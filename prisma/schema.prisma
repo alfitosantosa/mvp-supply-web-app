@@ -12,7 +12,6 @@ model User {
   name          String
   email         String    @unique
   emailVerified Boolean
-  isActive      Boolean   @default(false)
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -20,7 +19,7 @@ model User {
   banReason     String?
   banned        Boolean?  @default(false)
   role          String?   @default("user")
-  isActice      Boolean?  @default(false)
+  isActive      Boolean   @default(false)
   accounts      Account[]
   sessions      Session[]
 

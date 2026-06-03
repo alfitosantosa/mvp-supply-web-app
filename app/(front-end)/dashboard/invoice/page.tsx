@@ -104,6 +104,8 @@ import {
 import { useGetProduct } from "@/app/(hooks)/hooks/product/useProduct";
 import { UseGetCustomer } from "@/app/(hooks)/hooks/customer/useCustomer";
 import { useCompany } from "@/app/(hooks)/hooks/company/useCompany";
+import { useSession } from "@/lib/auth-client";
+import { unauthorized } from "next/navigation";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -325,7 +327,7 @@ function InvoiceFormDialog({
     control,
     watch,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     reset,
   } = useForm<InvoiceFormValues>({
     resolver: zodResolver(invoiceSchema),
@@ -354,51 +356,62 @@ function InvoiceFormDialog({
 
   const { fields, append, remove } = useFieldArray({ control, name: "items" });
 
+  // ✅ watch seluruh form untuk reaktivitas penuh
   const watchedItems = watch("items");
   const watchedDiscount = watch("discountRate");
   const watchedTaxRate = watch("taxRate");
 
-  // Computed totals
+  // ✅ Semua kalkulasi reactive — otomatis update saat item berubah
   const subTotal = React.useMemo(
-    () => watchedItems?.reduce((sum, item) => sum + (item.total || 0), 0) ?? 0,
+    () =>
+      (watchedItems ?? []).reduce(
+        (sum, item) => sum + (Number(item.total) || 0),
+        0,
+      ),
     [watchedItems],
   );
+
   const discountValue = React.useMemo(
-    () => (subTotal * (watchedDiscount || 0)) / 100,
+    () => Math.round((subTotal * (Number(watchedDiscount) || 0)) / 100),
     [subTotal, watchedDiscount],
   );
+
   const afterDiscount = subTotal - discountValue;
+
   const taxValue = React.useMemo(
-    () => (afterDiscount * (watchedTaxRate || 0)) / 100,
+    () => Math.round((afterDiscount * (Number(watchedTaxRate) || 0)) / 100),
     [afterDiscount, watchedTaxRate],
   );
+
   const totalAmount = afterDiscount + taxValue;
 
-  // Auto-populate price when product selected
+  // ✅ Handler produk — auto-fill harga & recalculate total
   const handleProductChange = (index: number, productId: string) => {
     const product = products.find((p) => p.id === productId);
-    if (product) {
-      setValue(`items.${index}.productId`, productId);
-      setValue(`items.${index}.productName`, product.name);
-      setValue(`items.${index}.price`, Number(product.price));
-      setValue(`items.${index}.imageUrl`, product.imageUrl ?? null);
-      const qty = watchedItems?.[index]?.quantity ?? 1;
-      setValue(`items.${index}.total`, Number(product.price) * qty);
-    }
+    if (!product) return;
+    const price = Number(product.price);
+    const qty = Number(watchedItems?.[index]?.quantity) || 1;
+    setValue(`items.${index}.productId`, productId, { shouldDirty: true });
+    setValue(`items.${index}.productName`, product.name, { shouldDirty: true });
+    setValue(`items.${index}.price`, price, { shouldDirty: true });
+    setValue(`items.${index}.imageUrl`, product.imageUrl ?? null);
+    setValue(`items.${index}.total`, price * qty, { shouldDirty: true });
   };
 
-  // Recalculate total when qty changes
-  const handleQtyChange = (index: number, qty: number) => {
-    const price = watchedItems?.[index]?.price ?? 0;
-    setValue(`items.${index}.quantity`, qty);
-    setValue(`items.${index}.total`, price * qty);
+  // ✅ Handler qty — recalculate total baris
+  const handleQtyChange = (index: number, rawQty: string) => {
+    const qty = Math.max(1, parseInt(rawQty) || 1);
+    const price = Number(watchedItems?.[index]?.price) || 0;
+    setValue(`items.${index}.quantity`, qty, { shouldDirty: true });
+    setValue(`items.${index}.total`, price * qty, { shouldDirty: true });
   };
 
-  // Recalculate total when price changes
-  const handlePriceChange = (index: number, price: number) => {
-    const qty = watchedItems?.[index]?.quantity ?? 1;
-    setValue(`items.${index}.price`, price);
-    setValue(`items.${index}.total`, price * qty);
+  // ✅ Handler harga manual — recalculate total baris
+  const handlePriceChange = (index: number, rawPrice: string) => {
+    const price = Math.max(0, parseFloat(rawPrice) || 0);
+    const qty = Number(watchedItems?.[index]?.quantity) || 1;
+    setValue(`items.${index}.price`, price, { shouldDirty: true });
+    setValue(`items.${index}.total`, price * qty, { shouldDirty: true });
   };
 
   React.useEffect(() => {
@@ -482,8 +495,6 @@ function InvoiceFormDialog({
           id: editData.id,
           ...invoicePayload,
         } as any);
-
-        // Delete old items then recreate
         if (editData.items?.length) {
           await deleteItems.mutateAsync(
             editData.items.map((i) => ({ id: i.id })),
@@ -538,345 +549,448 @@ function InvoiceFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[92vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>
+      {/*
+        ✅ FIX UTAMA:
+        - DialogContent pakai flex flex-col, tinggi penuh, TANPA overflow
+        - Scroll hanya ada di bagian tengah (flex-1 overflow-y-auto)
+        - SelectContent pakai position="popper" agar keluar dari stacking context
+      */}
+      <DialogContent className="w-screen max-w-none h-screen flex flex-col gap-0 p-0">
+        {/* ── Header (fixed, tidak scroll) ── */}
+        <DialogHeader className="px-6 py-4 border-b shrink-0">
+          <DialogTitle className="text-lg font-semibold">
             {editData ? "Edit Invoice" : "Buat Invoice Baru"}
           </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* Header Info */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="invoiceNumber">Nomor Invoice</Label>
-              <Input
-                id="invoiceNumber"
-                placeholder="INV-001"
-                {...register("invoiceNumber")}
-              />
-              {errors.invoiceNumber && (
-                <p className="text-sm text-red-500">
-                  {errors.invoiceNumber.message}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label>Status</Label>
-              <Controller
-                name="status"
-                control={control}
-                render={({ field }) => (
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pilih Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {STATUS_OPTIONS.map((s) => (
-                        <SelectItem key={s} value={s}>
-                          {s}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+        {/* ── Body (scrollable) ── */}
+        <div className="flex-1 overflow-y-auto px-6 py-6">
+          <form
+            id="invoice-form"
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-6 pb-4"
+          >
+            {/* ── Nomor Invoice & Status ── */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="invoiceNumber">Nomor Invoice</Label>
+                <Input
+                  id="invoiceNumber"
+                  placeholder="INV-001"
+                  {...register("invoiceNumber")}
+                />
+                {errors.invoiceNumber && (
+                  <p className="text-sm text-red-500">
+                    {errors.invoiceNumber.message}
+                  </p>
                 )}
-              />
-              {errors.status && (
-                <p className="text-sm text-red-500">{errors.status.message}</p>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="issuedAt">Tanggal Terbit</Label>
-              <Input id="issuedAt" type="date" {...register("issuedAt")} />
-              {errors.issuedAt && (
-                <p className="text-sm text-red-500">
-                  {errors.issuedAt.message}
-                </p>
-              )}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="dueDate">Jatuh Tempo</Label>
-              <Input id="dueDate" type="date" {...register("dueDate")} />
-              {errors.dueDate && (
-                <p className="text-sm text-red-500">{errors.dueDate.message}</p>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Perusahaan</Label>
-              <Controller
-                name="companyId"
-                control={control}
-                render={({ field }) => (
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pilih Perusahaan" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {companies.map((c: any) => (
-                        <SelectItem key={c.id} value={c.id}>
-                          {c.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <Controller
+                  name="status"
+                  control={control}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Pilih Status" />
+                      </SelectTrigger>
+                      <SelectContent
+                        position="popper"
+                        sideOffset={4}
+                        className="z-[9999] max-h-56 overflow-y-auto"
+                      >
+                        {STATUS_OPTIONS.map((s) => (
+                          <SelectItem key={s} value={s}>
+                            {s}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.status && (
+                  <p className="text-sm text-red-500">
+                    {errors.status.message}
+                  </p>
                 )}
-              />
-              {errors.companyId && (
-                <p className="text-sm text-red-500">
-                  {errors.companyId.message}
-                </p>
-              )}
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label>Pelanggan</Label>
-              <Controller
-                name="customerId"
-                control={control}
-                render={({ field }) => (
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pilih Pelanggan" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {customers.map((c: any) => (
-                        <SelectItem key={c.id} value={c.id}>
-                          {c.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+            {/* ── Tanggal ── */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="issuedAt">Tanggal Terbit</Label>
+                <Input id="issuedAt" type="date" {...register("issuedAt")} />
+                {errors.issuedAt && (
+                  <p className="text-sm text-red-500">
+                    {errors.issuedAt.message}
+                  </p>
                 )}
-              />
-              {errors.customerId && (
-                <p className="text-sm text-red-500">
-                  {errors.customerId.message}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* Invoice Items */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <Label className="text-base font-semibold">Item Invoice</Label>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  append({
-                    productId: "",
-                    productName: "",
-                    description: "",
-                    price: 0,
-                    quantity: 1,
-                    total: 0,
-                    imageUrl: null,
-                  })
-                }
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Tambah Item
-              </Button>
-            </div>
-
-            {errors.items &&
-              typeof errors.items === "object" &&
-              "message" in errors.items && (
-                <p className="text-sm text-red-500">
-                  {(errors.items as any).message}
-                </p>
-              )}
-
-            <div className="space-y-3">
-              {/* Items Header */}
-              <div className="grid grid-cols-12 gap-2 text-xs font-medium text-muted-foreground px-1">
-                <div className="col-span-3">Produk</div>
-                <div className="col-span-3">Deskripsi</div>
-                <div className="col-span-2">Harga</div>
-                <div className="col-span-1 text-center">Qty</div>
-                <div className="col-span-2 text-right">Total</div>
-                <div className="col-span-1" />
               </div>
-
-              {fields.map((field, index) => (
-                <div key={field.id} className="flex mx-auto gap-2 ">
-                  {/* Product Select */}
-                  <div className="col-span-3 ">
-                    <Controller
-                      name={`items.${index}.productId`}
-                      control={control}
-                      render={({ field: f }) => (
-                        <Select
-                          value={f.value}
-                          onValueChange={(val) =>
-                            handleProductChange(index, val)
-                          }
-                        >
-                          <SelectTrigger className="h-9 text-xs">
-                            <SelectValue placeholder="Pilih Produk" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {products.map((p) => (
-                              <SelectItem key={p.id} value={p.id}>
-                                <span className="text-xs">{p.name}</span>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      )}
-                    />
-                    {errors.items?.[index]?.productId && (
-                      <p className="text-xs text-red-500 mt-1">
-                        {errors.items[index]?.productId?.message}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Description */}
-                  <div className="col-span-3">
-                    <Input
-                      className="h-9 text-xs"
-                      placeholder="Deskripsi (opsional)"
-                      {...register(`items.${index}.description`)}
-                    />
-                  </div>
-
-                  {/* Price */}
-                  <div className="col-span-2">
-                    <Input
-                      className="h-9 text-xs"
-                      type="number"
-                      min={0}
-                      placeholder="Harga"
-                      value={watchedItems?.[index]?.price ?? 0}
-                      onChange={(e) =>
-                        handlePriceChange(index, Number(e.target.value))
-                      }
-                    />
-                  </div>
-
-                  {/* Qty */}
-                  <div className="col-span-1">
-                    <Input
-                      className="h-9 text-xs text-center"
-                      type="number"
-                      min={1}
-                      placeholder="1"
-                      value={watchedItems?.[index]?.quantity ?? 1}
-                      onChange={(e) =>
-                        handleQtyChange(index, Number(e.target.value))
-                      }
-                    />
-                  </div>
-
-                  {/* Total */}
-                  <div className="col-span-2 flex items-center justify-end">
-                    <span className="text-xs font-medium">
-                      {formatCurrency(watchedItems?.[index]?.total ?? 0)}
-                    </span>
-                  </div>
-
-                  {/* Remove */}
-                  <div className="col-span-1 flex justify-center">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="h-9 w-9 p-0 text-red-500 hover:text-red-700"
-                      onClick={() => remove(index)}
-                      disabled={fields.length === 1}
-                    >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* Totals */}
-          <div className="space-y-2 max-w-xs ml-auto">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Subtotal</span>
-              <span className="font-medium">{formatCurrency(subTotal)}</span>
-            </div>
-
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">Diskon</span>
-                <div className="relative w-20">
-                  <Input
-                    type="number"
-                    min={0}
-                    max={100}
-                    className="h-7 text-xs pr-6"
-                    {...register("discountRate", { valueAsNumber: true })}
-                  />
-                  <Percent className="absolute right-1.5 top-1.5 h-3 w-3 text-muted-foreground" />
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="dueDate">Jatuh Tempo</Label>
+                <Input id="dueDate" type="date" {...register("dueDate")} />
+                {errors.dueDate && (
+                  <p className="text-sm text-red-500">
+                    {errors.dueDate.message}
+                  </p>
+                )}
               </div>
-              <span className="text-sm font-medium text-red-500">
-                -{formatCurrency(discountValue)}
-              </span>
             </div>
 
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">PPN</span>
-                <div className="relative w-20">
-                  <Input
-                    type="number"
-                    min={0}
-                    max={100}
-                    className="h-7 text-xs pr-6"
-                    {...register("taxRate", { valueAsNumber: true })}
-                  />
-                  <Percent className="absolute right-1.5 top-1.5 h-3 w-3 text-muted-foreground" />
-                </div>
+            {/* ── Perusahaan & Pelanggan ── */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Perusahaan</Label>
+                <Controller
+                  name="companyId"
+                  control={control}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Pilih Perusahaan" />
+                      </SelectTrigger>
+                      <SelectContent
+                        position="popper"
+                        sideOffset={4}
+                        className="z-[9999] max-h-56 overflow-y-auto"
+                      >
+                        {companies.map((c: any) => (
+                          <SelectItem key={c.id} value={c.id}>
+                            {c.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.companyId && (
+                  <p className="text-sm text-red-500">
+                    {errors.companyId.message}
+                  </p>
+                )}
               </div>
-              <span className="text-sm font-medium text-blue-500">
-                +{formatCurrency(taxValue)}
-              </span>
+              <div className="space-y-2">
+                <Label>Pelanggan</Label>
+                <Controller
+                  name="customerId"
+                  control={control}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Pilih Pelanggan" />
+                      </SelectTrigger>
+                      <SelectContent
+                        position="popper"
+                        sideOffset={4}
+                        className="z-[9999] max-h-56 overflow-y-auto"
+                      >
+                        {customers.map((c: any) => (
+                          <SelectItem key={c.id} value={c.id}>
+                            {c.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.customerId && (
+                  <p className="text-sm text-red-500">
+                    {errors.customerId.message}
+                  </p>
+                )}
+              </div>
             </div>
 
             <Separator />
-            <div className="flex justify-between">
-              <span className="font-semibold">Total</span>
-              <span className="font-bold text-lg">
-                {formatCurrency(totalAmount)}
-              </span>
+
+            {/* ── Invoice Items ── */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-base font-semibold">
+                    Item Invoice
+                  </Label>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {fields.length} item · Subtotal {formatCurrency(subTotal)}
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    append({
+                      productId: "",
+                      productName: "",
+                      description: "",
+                      price: 0,
+                      quantity: 1,
+                      total: 0,
+                      imageUrl: null,
+                    })
+                  }
+                >
+                  <Plus className="mr-2 h-4 w-4" />
+                  Tambah Item
+                </Button>
+              </div>
+
+              {errors.items &&
+                typeof errors.items === "object" &&
+                "message" in errors.items && (
+                  <p className="text-sm text-red-500">
+                    {(errors.items as any).message}
+                  </p>
+                )}
+
+              {/* Column headers — hanya desktop */}
+              <div className="hidden md:grid grid-cols-12 gap-2 text-xs font-medium text-muted-foreground px-3">
+                <div className="col-span-4">Produk</div>
+                <div className="col-span-3">Deskripsi</div>
+                <div className="col-span-2">Harga (Rp)</div>
+                <div className="col-span-1 text-center">Qty</div>
+                <div className="col-span-2 text-right">Total</div>
+              </div>
+
+              <div className="space-y-2">
+                {fields.map((field, index) => (
+                  <div
+                    key={field.id}
+                    className="grid grid-cols-12 gap-2 items-start rounded-lg border bg-card p-3"
+                  >
+                    {/* Produk */}
+                    <div className="col-span-12 md:col-span-4">
+                      <p className="text-xs text-muted-foreground mb-1 md:hidden">
+                        Produk
+                      </p>
+                      <Controller
+                        name={`items.${index}.productId`}
+                        control={control}
+                        render={({ field: f }) => (
+                          <Select
+                            value={f.value}
+                            onValueChange={(val) =>
+                              handleProductChange(index, val)
+                            }
+                          >
+                            <SelectTrigger className="h-9 text-xs">
+                              <SelectValue placeholder="Pilih Produk" />
+                            </SelectTrigger>
+                            {/*
+                              ✅ FIX DROPDOWN PRODUK:
+                              position="popper" + portal ke body
+                              sehingga tidak ter-clip oleh overflow container
+                            */}
+                            <SelectContent
+                              position="popper"
+                              sideOffset={4}
+                              className="z-[9999] max-h-56 overflow-y-auto"
+                            >
+                              {products.map((p) => (
+                                <SelectItem key={p.id} value={p.id}>
+                                  <div className="flex flex-col">
+                                    <span className="text-xs font-medium">
+                                      {p.name}
+                                    </span>
+                                    <span className="text-xs text-muted-foreground">
+                                      {formatCurrency(Number(p.price))} · stok{" "}
+                                      {p.stock}
+                                    </span>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
+                      {errors.items?.[index]?.productId && (
+                        <p className="text-xs text-red-500 mt-1">
+                          {errors.items[index]?.productId?.message}
+                        </p>
+                      )}
+                      {/* Nama produk terpilih sebagai hint */}
+                      {/* {watchedItems?.[index]?.productName && (
+                        <p className="text-xs text-muted-foreground mt-1 truncate">
+                          {watchedItems[index].productName}
+                        </p>
+                      )} */}
+                    </div>
+
+                    {/* Deskripsi */}
+                    <div className="col-span-12 md:col-span-3">
+                      <p className="text-xs text-muted-foreground mb-1 md:hidden">
+                        Deskripsi
+                      </p>
+                      <Input
+                        className="h-9 text-xs"
+                        placeholder="Deskripsi (opsional)"
+                        {...register(`items.${index}.description`)}
+                      />
+                    </div>
+
+                    {/* Harga */}
+                    <div className="col-span-6 md:col-span-2">
+                      <p className="text-xs text-muted-foreground mb-1 md:hidden">
+                        Harga (Rp)
+                      </p>
+                      <Input
+                        className="h-9 text-xs tabular-nums"
+                        type="number"
+                        min={0}
+                        placeholder="0"
+                        value={watchedItems?.[index]?.price ?? 0}
+                        onChange={(e) =>
+                          handlePriceChange(index, e.target.value)
+                        }
+                      />
+                    </div>
+
+                    {/* Qty */}
+                    <div className="col-span-3 md:col-span-1">
+                      <p className="text-xs text-muted-foreground mb-1 md:hidden">
+                        Qty
+                      </p>
+                      <Input
+                        className="h-9 text-xs text-center tabular-nums"
+                        type="number"
+                        min={1}
+                        placeholder="1"
+                        value={watchedItems?.[index]?.quantity ?? 1}
+                        onChange={(e) => handleQtyChange(index, e.target.value)}
+                      />
+                    </div>
+
+                    {/* Total baris — live update */}
+                    <div className="col-span-2 md:col-span-2 flex items-center justify-end h-9">
+                      <span className="text-xs font-semibold tabular-nums text-right">
+                        {formatCurrency(watchedItems?.[index]?.total ?? 0)}
+                      </span>
+                    </div>
+
+                    {/* Hapus */}
+                    <div className="col-span-1 flex  justify-start">
+                      <Button
+                        variant="secondary"
+                        onClick={() => remove(index)}
+                        disabled={fields.length === 1}
+                        title="Hapus item"
+                      >
+                        Hapus
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-            <p className="text-xs text-muted-foreground italic text-right">
-              {toTerbilang(totalAmount)}
-            </p>
+
+            <Separator />
+
+            {/* ── Ringkasan Total — live reactive ── */}
+            <div className="flex justify-end">
+              <div className="w-full max-w-sm space-y-2">
+                {/* Subtotal */}
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">
+                    Subtotal ({fields.length} item)
+                  </span>
+                  <span className="font-medium tabular-nums">
+                    {formatCurrency(subTotal)}
+                  </span>
+                </div>
+
+                {/* Diskon */}
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">
+                      Diskon
+                    </span>
+                    <div className="relative w-20">
+                      <Input
+                        type="number"
+                        min={0}
+                        max={100}
+                        step={0.1}
+                        className="h-7 text-xs pr-6 tabular-nums"
+                        {...register("discountRate", { valueAsNumber: true })}
+                      />
+                      <Percent className="absolute right-1.5 top-1.5 h-3 w-3 text-muted-foreground" />
+                    </div>
+                  </div>
+                  <span className="text-sm font-medium text-red-500 tabular-nums">
+                    -{formatCurrency(discountValue)}
+                  </span>
+                </div>
+
+                {/* PPN */}
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">PPN</span>
+                    <div className="relative w-20">
+                      <Input
+                        type="number"
+                        min={0}
+                        max={100}
+                        step={0.1}
+                        className="h-7 text-xs pr-6 tabular-nums"
+                        {...register("taxRate", { valueAsNumber: true })}
+                      />
+                      <Percent className="absolute right-1.5 top-1.5 h-3 w-3 text-muted-foreground" />
+                    </div>
+                  </div>
+                  <span className="text-sm font-medium text-blue-500 tabular-nums">
+                    +{formatCurrency(taxValue)}
+                  </span>
+                </div>
+
+                <Separator />
+
+                {/* Grand Total */}
+                <div className="flex justify-between items-center">
+                  <span className="font-bold text-base">Total</span>
+                  <span className="font-bold text-xl tabular-nums">
+                    {formatCurrency(totalAmount)}
+                  </span>
+                </div>
+
+                {/* Terbilang */}
+                <p className="text-xs text-muted-foreground italic text-right leading-relaxed">
+                  {toTerbilang(totalAmount)}
+                </p>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        {/* ── Footer (fixed, tidak scroll) ── */}
+        <div className="px-6 py-4 border-t shrink-0 flex items-center justify-between bg-background">
+          {/* Info ringkas di kiri */}
+          <div className="text-sm text-muted-foreground">
+            {fields.length} item ·{" "}
+            <span className="font-semibold text-foreground">
+              {formatCurrency(totalAmount)}
+            </span>
           </div>
 
-          <div className="flex justify-end gap-2 pt-2">
+          <div className="flex gap-2">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
+              disabled={isPending}
             >
               Batal
             </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? "Menyimpan..." : editData ? "Perbarui" : "Simpan"}
+            <Button type="submit" form="invoice-form" disabled={isPending}>
+              {isPending
+                ? "Menyimpan..."
+                : editData
+                  ? "Perbarui Invoice"
+                  : "Simpan Invoice"}
             </Button>
           </div>
-        </form>
+        </div>
       </DialogContent>
     </Dialog>
   );
@@ -983,7 +1097,7 @@ function ExpandedItemsRow({ items }: { items: InvoiceItemData[] }) {
 
 // ─── Main DataTable ────────────────────────────────────────────────────────────
 
-export default function InvoiceDataTable() {
+function InvoiceDataTableUI() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -1375,7 +1489,7 @@ export default function InvoiceDataTable() {
               <SelectTrigger className="w-[140px]">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="z-[9999] max-h-56 overflow-y-auto">
                 <SelectItem value="all">Semua Status</SelectItem>
                 {STATUS_OPTIONS.map((s) => (
                   <SelectItem key={s} value={s}>
@@ -1638,4 +1752,13 @@ export default function InvoiceDataTable() {
       </div>
     </>
   );
+}
+
+export default function InvoicePage() {
+  const session = useSession();
+
+  if (!session.data) {
+    unauthorized();
+  }
+  return <InvoiceDataTableUI />;
 }

@@ -36,7 +36,7 @@ export type UserMinAggregateOutputType = {
   banReason: string | null
   banned: boolean | null
   role: string | null
-  isActice: boolean | null
+  isActive: boolean | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -51,7 +51,7 @@ export type UserMaxAggregateOutputType = {
   banReason: string | null
   banned: boolean | null
   role: string | null
-  isActice: boolean | null
+  isActive: boolean | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -66,7 +66,7 @@ export type UserCountAggregateOutputType = {
   banReason: number
   banned: number
   role: number
-  isActice: number
+  isActive: number
   _all: number
 }
 
@@ -83,7 +83,7 @@ export type UserMinAggregateInputType = {
   banReason?: true
   banned?: true
   role?: true
-  isActice?: true
+  isActive?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -98,7 +98,7 @@ export type UserMaxAggregateInputType = {
   banReason?: true
   banned?: true
   role?: true
-  isActice?: true
+  isActive?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -113,7 +113,7 @@ export type UserCountAggregateInputType = {
   banReason?: true
   banned?: true
   role?: true
-  isActice?: true
+  isActive?: true
   _all?: true
 }
 
@@ -201,13 +201,13 @@ export type UserGroupByOutputType = {
   banReason: string | null
   banned: boolean | null
   role: string | null
-  isActice: boolean | null
+  isActive: boolean
   _count: UserCountAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
 }
 
-type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
+export type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<UserGroupByOutputType, T['by']> &
       {
@@ -237,7 +237,7 @@ export type UserWhereInput = {
   banReason?: Prisma.StringNullableFilter<"User"> | string | null
   banned?: Prisma.BoolNullableFilter<"User"> | boolean | null
   role?: Prisma.StringNullableFilter<"User"> | string | null
-  isActice?: Prisma.BoolNullableFilter<"User"> | boolean | null
+  isActive?: Prisma.BoolFilter<"User"> | boolean
   accounts?: Prisma.AccountListRelationFilter
   sessions?: Prisma.SessionListRelationFilter
 }
@@ -254,7 +254,7 @@ export type UserOrderByWithRelationInput = {
   banReason?: Prisma.SortOrderInput | Prisma.SortOrder
   banned?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrderInput | Prisma.SortOrder
-  isActice?: Prisma.SortOrderInput | Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   accounts?: Prisma.AccountOrderByRelationAggregateInput
   sessions?: Prisma.SessionOrderByRelationAggregateInput
 }
@@ -274,7 +274,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   banReason?: Prisma.StringNullableFilter<"User"> | string | null
   banned?: Prisma.BoolNullableFilter<"User"> | boolean | null
   role?: Prisma.StringNullableFilter<"User"> | string | null
-  isActice?: Prisma.BoolNullableFilter<"User"> | boolean | null
+  isActive?: Prisma.BoolFilter<"User"> | boolean
   accounts?: Prisma.AccountListRelationFilter
   sessions?: Prisma.SessionListRelationFilter
 }, "id" | "id" | "email">
@@ -291,7 +291,7 @@ export type UserOrderByWithAggregationInput = {
   banReason?: Prisma.SortOrderInput | Prisma.SortOrder
   banned?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrderInput | Prisma.SortOrder
-  isActice?: Prisma.SortOrderInput | Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
@@ -312,7 +312,7 @@ export type UserScalarWhereWithAggregatesInput = {
   banReason?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   banned?: Prisma.BoolNullableWithAggregatesFilter<"User"> | boolean | null
   role?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  isActice?: Prisma.BoolNullableWithAggregatesFilter<"User"> | boolean | null
+  isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
 }
 
 export type UserCreateInput = {
@@ -327,7 +327,7 @@ export type UserCreateInput = {
   banReason?: string | null
   banned?: boolean | null
   role?: string | null
-  isActice?: boolean | null
+  isActive?: boolean
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
 }
@@ -344,7 +344,7 @@ export type UserUncheckedCreateInput = {
   banReason?: string | null
   banned?: boolean | null
   role?: string | null
-  isActice?: boolean | null
+  isActive?: boolean
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
 }
@@ -361,7 +361,7 @@ export type UserUpdateInput = {
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActice?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
 }
@@ -378,7 +378,7 @@ export type UserUncheckedUpdateInput = {
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActice?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -395,7 +395,7 @@ export type UserCreateManyInput = {
   banReason?: string | null
   banned?: boolean | null
   role?: string | null
-  isActice?: boolean | null
+  isActive?: boolean
 }
 
 export type UserUpdateManyMutationInput = {
@@ -410,7 +410,7 @@ export type UserUpdateManyMutationInput = {
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActice?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -425,7 +425,7 @@ export type UserUncheckedUpdateManyInput = {
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActice?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -440,7 +440,7 @@ export type UserCountOrderByAggregateInput = {
   banReason?: Prisma.SortOrder
   banned?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  isActice?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -455,7 +455,7 @@ export type UserMaxOrderByAggregateInput = {
   banReason?: Prisma.SortOrder
   banned?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  isActice?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -470,7 +470,7 @@ export type UserMinOrderByAggregateInput = {
   banReason?: Prisma.SortOrder
   banned?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  isActice?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -542,7 +542,7 @@ export type UserCreateWithoutSessionsInput = {
   banReason?: string | null
   banned?: boolean | null
   role?: string | null
-  isActice?: boolean | null
+  isActive?: boolean
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
 }
 
@@ -558,7 +558,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   banReason?: string | null
   banned?: boolean | null
   role?: string | null
-  isActice?: boolean | null
+  isActive?: boolean
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -590,7 +590,7 @@ export type UserUpdateWithoutSessionsInput = {
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActice?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
 }
 
@@ -606,7 +606,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActice?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -622,7 +622,7 @@ export type UserCreateWithoutAccountsInput = {
   banReason?: string | null
   banned?: boolean | null
   role?: string | null
-  isActice?: boolean | null
+  isActive?: boolean
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
 }
 
@@ -638,7 +638,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   banReason?: string | null
   banned?: boolean | null
   role?: string | null
-  isActice?: boolean | null
+  isActive?: boolean
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -670,7 +670,7 @@ export type UserUpdateWithoutAccountsInput = {
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActice?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
 }
 
@@ -686,7 +686,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActice?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -742,7 +742,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   banReason?: boolean
   banned?: boolean
   role?: boolean
-  isActice?: boolean
+  isActive?: boolean
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -760,7 +760,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   banReason?: boolean
   banned?: boolean
   role?: boolean
-  isActice?: boolean
+  isActive?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -775,7 +775,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   banReason?: boolean
   banned?: boolean
   role?: boolean
-  isActice?: boolean
+  isActive?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -790,10 +790,10 @@ export type UserSelectScalar = {
   banReason?: boolean
   banned?: boolean
   role?: boolean
-  isActice?: boolean
+  isActive?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "banExpires" | "banReason" | "banned" | "role" | "isActice", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "banExpires" | "banReason" | "banned" | "role" | "isActive", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
@@ -820,7 +820,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     banReason: string | null
     banned: boolean | null
     role: string | null
-    isActice: boolean | null
+    isActive: boolean
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -1257,7 +1257,7 @@ export interface UserFieldRefs {
   readonly banReason: Prisma.FieldRef<"User", 'String'>
   readonly banned: Prisma.FieldRef<"User", 'Boolean'>
   readonly role: Prisma.FieldRef<"User", 'String'>
-  readonly isActice: Prisma.FieldRef<"User", 'Boolean'>
+  readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
 }
     
 
@@ -1454,6 +1454,11 @@ export type UserFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Skip the first `n` Users.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Users.
+   */
   distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
 }
 
