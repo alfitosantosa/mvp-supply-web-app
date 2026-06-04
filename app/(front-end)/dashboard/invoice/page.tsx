@@ -34,6 +34,8 @@ import {
   Percent,
   Tag,
   FileDown,
+  ChevronsUpDown,
+  Check,
 } from "lucide-react";
 import { createPDFInvoice } from "@/app/(action)/createPDF/createPDFInvoice";
 import { createPDFOffering } from "@/app/(action)/createPDF/createPDFOffering";
@@ -106,6 +108,28 @@ import { UseGetCustomer } from "@/app/(hooks)/hooks/customer/useCustomer";
 import { useCompany } from "@/app/(hooks)/hooks/company/useCompany";
 import { useSession } from "@/lib/auth-client";
 import { unauthorized } from "next/navigation";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import { CommandList } from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -278,6 +302,98 @@ const invoiceSchema = z.object({
 });
 
 type InvoiceFormValues = z.infer<typeof invoiceSchema>;
+
+// combobox product components
+
+// ─── ProductCombobox ──────────────────────────────────────────────────────────
+function ProductCombobox({
+  products,
+  value,
+  onValueChange,
+  disabled = false,
+}: {
+  products: ProductData[];
+  value: string;
+  onValueChange: (value: string) => void;
+  disabled?: boolean;
+}) {
+  const [open, setOpen] = React.useState(false);
+
+  const selectedProduct = products.find((p) => p.id === value);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen} modal={true}>
+      {/*
+        ✅ modal={true} adalah kunci utama!
+        Tanpa ini, Popover di dalam Dialog akan ter-clip
+        karena focus trap Dialog menghalangi interaksi
+      */}
+      <PopoverTrigger asChild>
+        <Button
+          type="button"
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          disabled={disabled}
+          className="h-9 w-full justify-between text-xs font-normal"
+        >
+          <span className="truncate">
+            {selectedProduct ? selectedProduct.name : "Pilih Produk..."}
+          </span>
+          <ChevronsUpDown className="ml-2 h-3.5 w-3.5 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+
+      {/*
+        ✅ PopoverContent dengan portal ke body
+        sehingga tidak ter-clip oleh overflow:hidden Dialog
+      */}
+      <PopoverContent
+        className="w-[320px] p-0 z-[9999]"
+        align="start"
+        sideOffset={4}
+        // Ini memastikan render di luar DOM tree Dialog
+        // (PopoverContent sudah pakai Portal by default di Radix)
+      >
+        <Command>
+          <CommandInput placeholder="Cari produk..." className="h-9 text-xs" />
+          <CommandList className="max-h-48">
+            <CommandEmpty className="py-4 text-center text-xs text-muted-foreground">
+              Produk tidak ditemukan.
+            </CommandEmpty>
+            <CommandGroup>
+              {products.map((product) => (
+                <CommandItem
+                  key={product.id}
+                  value={product.name} // ← Command filter by ini
+                  onSelect={() => {
+                    onValueChange(product.id);
+                    setOpen(false);
+                  }}
+                  className="text-xs cursor-pointer"
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-3.5 w-3.5 shrink-0",
+                      value === product.id ? "opacity-100" : "opacity-0",
+                    )}
+                  />
+                  <div className="flex flex-col min-w-0">
+                    <span className="font-medium truncate">{product.name}</span>
+                    <span className="text-muted-foreground text-xs">
+                      {formatCurrency(Number(product.price))} · stok{" "}
+                      {product.stock}
+                    </span>
+                  </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 // ─── Invoice Form Dialog ───────────────────────────────────────────────────────
 
@@ -765,44 +881,19 @@ function InvoiceFormDialog({
                       <p className="text-xs text-muted-foreground mb-1 md:hidden">
                         Produk
                       </p>
+
                       <Controller
                         name={`items.${index}.productId`}
                         control={control}
                         render={({ field: f }) => (
-                          <Select
+                          <ProductCombobox
+                            products={products}
                             value={f.value}
-                            onValueChange={(val) =>
-                              handleProductChange(index, val)
-                            }
-                          >
-                            <SelectTrigger className="h-9 text-xs">
-                              <SelectValue placeholder="Pilih Produk" />
-                            </SelectTrigger>
-                            {/*
-                              ✅ FIX DROPDOWN PRODUK:
-                              position="popper" + portal ke body
-                              sehingga tidak ter-clip oleh overflow container
-                            */}
-                            <SelectContent
-                              position="popper"
-                              sideOffset={4}
-                              className="z-[9999] max-h-56 overflow-y-auto"
-                            >
-                              {products.map((p) => (
-                                <SelectItem key={p.id} value={p.id}>
-                                  <div className="flex flex-col">
-                                    <span className="text-xs font-medium">
-                                      {p.name}
-                                    </span>
-                                    <span className="text-xs text-muted-foreground">
-                                      {formatCurrency(Number(p.price))} · stok{" "}
-                                      {p.stock}
-                                    </span>
-                                  </div>
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                            onValueChange={(val) => {
+                              f.onChange(val);
+                              handleProductChange(index, val);
+                            }}
+                          />
                         )}
                       />
                       {errors.items?.[index]?.productId && (
@@ -810,12 +901,6 @@ function InvoiceFormDialog({
                           {errors.items[index]?.productId?.message}
                         </p>
                       )}
-                      {/* Nama produk terpilih sebagai hint */}
-                      {/* {watchedItems?.[index]?.productName && (
-                        <p className="text-xs text-muted-foreground mt-1 truncate">
-                          {watchedItems[index].productName}
-                        </p>
-                      )} */}
                     </div>
 
                     {/* Deskripsi */}
