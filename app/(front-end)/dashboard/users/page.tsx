@@ -951,7 +951,7 @@ export default function BetterAuthUserPage() {
   const { data: userData, isLoading: isLoadingUserData } = useGetUserById(
     userId as string,
   );
-  const userRole = userData?.role?.name;
+  // const userRole = userData?.role?.name;
 
   if (isPending || isLoadingUserData) return <Loading />;
   // if (userRole !== "Admin") {

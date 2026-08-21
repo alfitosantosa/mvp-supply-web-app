@@ -187,20 +187,10 @@ export default function SignUp() {
               className={cn("w-full gap-2")}
               disabled={loading}
               onClick={async () => {
-                await signIn.social(
-                  {
-                    provider: "google",
-                    callbackURL: "/",
-                  },
-                  {
-                    onRequest: (ctx) => {
-                      setLoading(true);
-                    },
-                    onResponse: (ctx) => {
-                      setLoading(false);
-                    },
-                  },
-                );
+                await signIn.social({
+                  provider: "google",
+                  callbackURL: "/",
+                });
               }}
             >
               <svg
