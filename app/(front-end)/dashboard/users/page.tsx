@@ -617,7 +617,7 @@ function BetterAuthUserDataTable() {
   };
 
   return (
-    <div className="mx-auto my-8 p-6 max-w-7xl min-h-screen">
+    <div className="min-w-0">
       <div className="font-bold text-3xl mb-6">Manajemen User (Auth)</div>
 
       {/* ── Toolbar ── */}

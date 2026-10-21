@@ -782,7 +782,7 @@ function ProductDataTableUI() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-[50vh] items-center justify-center">
         <div className="text-muted-foreground animate-pulse">
           Memuat data produk...
         </div>
@@ -791,7 +791,7 @@ function ProductDataTableUI() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl min-h-screen my-8 p-6">
+    <div className="min-w-0">
       <div className="font-bold text-3xl mb-6">Manajemen Produk</div>
 
       {/* Summary Cards */}

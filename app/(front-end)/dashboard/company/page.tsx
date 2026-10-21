@@ -666,7 +666,7 @@ function CompanyDataTableUI() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex min-h-[50vh] items-center justify-center">
         <div className="text-muted-foreground">Memuat data...</div>
       </div>
     );
@@ -674,7 +674,7 @@ function CompanyDataTableUI() {
 
   return (
     <>
-      <div className="mx-auto min-h-screen my-8 p-6 max-w-7xl">
+      <div className="min-w-0">
         <div className="font-bold text-3xl mb-6">Data Perusahaan</div>
 
         <div className="flex items-center justify-between py-4 flex-wrap gap-y-2">

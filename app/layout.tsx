@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/navbar";
+import { AppSidebar } from "@/components/app-sidebar";
+import { SiteHeader } from "@/components/site-header";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Footer } from "@/components/footer";
 import { ReactQueryProvider } from "@/lib/react-router";
 import { Toaster } from "@/components/ui/sonner";
@@ -33,9 +35,14 @@ export default function RootLayout({
       >
         <Toaster />
         <ReactQueryProvider>
-          <Navbar />
-          {children}
-          <Footer />
+          <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset className="min-w-0">
+              <SiteHeader />
+              <div className="flex min-w-0 flex-1 flex-col">{children}</div>
+              <Footer />
+            </SidebarInset>
+          </SidebarProvider>
         </ReactQueryProvider>
       </body>
     </html>
