@@ -214,7 +214,7 @@ function CompanyFormDialog({
                 {...register("name")}
               />
               {errors.name && (
-                <p className="text-sm text-red-500">{errors.name.message}</p>
+                <p className="text-sm text-destructive">{errors.name.message}</p>
               )}
             </div>
 
@@ -226,7 +226,7 @@ function CompanyFormDialog({
                 {...register("brandName")}
               />
               {errors.brandName && (
-                <p className="text-sm text-red-500">
+                <p className="text-sm text-destructive">
                   {errors.brandName.message}
                 </p>
               )}
@@ -241,7 +241,7 @@ function CompanyFormDialog({
               {...register("address")}
             />
             {errors.address && (
-              <p className="text-sm text-red-500">{errors.address.message}</p>
+              <p className="text-sm text-destructive">{errors.address.message}</p>
             )}
           </div>
 
@@ -255,7 +255,7 @@ function CompanyFormDialog({
                 {...register("email")}
               />
               {errors.email && (
-                <p className="text-sm text-red-500">{errors.email.message}</p>
+                <p className="text-sm text-destructive">{errors.email.message}</p>
               )}
             </div>
 
@@ -267,7 +267,7 @@ function CompanyFormDialog({
                 {...register("phone")}
               />
               {errors.phone && (
-                <p className="text-sm text-red-500">{errors.phone.message}</p>
+                <p className="text-sm text-destructive">{errors.phone.message}</p>
               )}
             </div>
           </div>
@@ -282,7 +282,7 @@ function CompanyFormDialog({
                 {...register("bankName")}
               />
               {errors.bankName && (
-                <p className="text-sm text-red-500">
+                <p className="text-sm text-destructive">
                   {errors.bankName.message}
                 </p>
               )}
@@ -296,7 +296,7 @@ function CompanyFormDialog({
                 {...register("bankAccount")}
               />
               {errors.bankAccount && (
-                <p className="text-sm text-red-500">
+                <p className="text-sm text-destructive">
                   {errors.bankAccount.message}
                 </p>
               )}
@@ -313,7 +313,7 @@ function CompanyFormDialog({
                 {...register("senderName")}
               />
               {errors.senderName && (
-                <p className="text-sm text-red-500">
+                <p className="text-sm text-destructive">
                   {errors.senderName.message}
                 </p>
               )}
@@ -327,7 +327,7 @@ function CompanyFormDialog({
                 {...register("senderTitle")}
               />
               {errors.senderTitle && (
-                <p className="text-sm text-red-500">
+                <p className="text-sm text-destructive">
                   {errors.senderTitle.message}
                 </p>
               )}
@@ -397,7 +397,7 @@ function DeleteCompanyDialog({
           <AlertDialogAction
             onClick={handleDelete}
             disabled={isDeleting}
-            className="bg-red-600 hover:bg-red-700"
+            className="bg-destructive text-white hover:bg-destructive/90"
           >
             {isDeleting ? "Menghapus..." : "Hapus"}
           </AlertDialogAction>
@@ -630,7 +630,7 @@ function CompanyDataTableUI() {
                   setSelectedCompany(companyData);
                   setDeleteDialogOpen(true);
                 }}
-                className="text-red-600"
+                className="text-destructive"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
                 Hapus
@@ -881,7 +881,7 @@ function CompanyDataTableUI() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
           <div className="bg-card rounded-lg border p-4">
             <div className="flex items-center space-x-2">
-              <Building2 className="h-5 w-5 text-blue-500" />
+              <Building2 className="h-5 w-5 text-muted-foreground" />
               <h3 className="font-semibold">Total Perusahaan</h3>
             </div>
             <p className="text-2xl font-bold mt-2">{companies.length}</p>
@@ -894,7 +894,7 @@ function CompanyDataTableUI() {
 
           <div className="bg-card rounded-lg border p-4">
             <div className="flex items-center space-x-2">
-              <CreditCard className="h-5 w-5 text-green-500" />
+              <CreditCard className="h-5 w-5 text-muted-foreground" />
               <h3 className="font-semibold">Bank Terdaftar</h3>
             </div>
             <p className="text-2xl font-bold mt-2">

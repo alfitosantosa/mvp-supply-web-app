@@ -108,6 +108,7 @@ import { UseGetCustomer } from "@/app/(hooks)/hooks/customer/useCustomer";
 import { useCompany } from "@/app/(hooks)/hooks/company/useCompany";
 import { useSession } from "@/lib/auth-client";
 import { unauthorized } from "next/navigation";
+import Loading from "@/components/loading";
 import {
   Combobox,
   ComboboxContent,
@@ -193,11 +194,11 @@ const STATUS_VARIANT: Record<
 };
 
 const STATUS_COLOR: Record<string, string> = {
-  DRAFT: "bg-gray-100 text-gray-700",
-  SENT: "bg-blue-100 text-blue-700",
-  PAID: "bg-green-100 text-green-700",
-  OVERDUE: "bg-red-100 text-red-700",
-  CANCELLED: "bg-slate-100 text-slate-500",
+  DRAFT: "bg-muted text-muted-foreground",
+  SENT: "bg-brand/10 text-brand",
+  PAID: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",
+  OVERDUE: "bg-destructive/10 text-destructive",
+  CANCELLED: "border border-border text-muted-foreground",
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -671,7 +672,7 @@ function InvoiceFormDialog({
         - Scroll hanya ada di bagian tengah (flex-1 overflow-y-auto)
         - SelectContent pakai position="popper" agar keluar dari stacking context
       */}
-      <DialogContent className="w-screen max-w-none h-screen flex flex-col gap-0 p-0">
+      <DialogContent className="h-[100dvh] w-screen max-w-none flex flex-col gap-0 p-0">
         {/* ── Header (fixed, tidak scroll) ── */}
         <DialogHeader className="px-6 py-4 border-b shrink-0">
           <DialogTitle className="text-lg font-semibold">
@@ -696,7 +697,7 @@ function InvoiceFormDialog({
                   {...register("invoiceNumber")}
                 />
                 {errors.invoiceNumber && (
-                  <p className="text-sm text-red-500">
+                  <p className="text-sm text-destructive">
                     {errors.invoiceNumber.message}
                   </p>
                 )}
@@ -726,7 +727,7 @@ function InvoiceFormDialog({
                   )}
                 />
                 {errors.status && (
-                  <p className="text-sm text-red-500">
+                  <p className="text-sm text-destructive">
                     {errors.status.message}
                   </p>
                 )}
@@ -739,7 +740,7 @@ function InvoiceFormDialog({
                 <Label htmlFor="issuedAt">Tanggal Terbit</Label>
                 <Input id="issuedAt" type="date" {...register("issuedAt")} />
                 {errors.issuedAt && (
-                  <p className="text-sm text-red-500">
+                  <p className="text-sm text-destructive">
                     {errors.issuedAt.message}
                   </p>
                 )}
@@ -748,7 +749,7 @@ function InvoiceFormDialog({
                 <Label htmlFor="dueDate">Jatuh Tempo</Label>
                 <Input id="dueDate" type="date" {...register("dueDate")} />
                 {errors.dueDate && (
-                  <p className="text-sm text-red-500">
+                  <p className="text-sm text-destructive">
                     {errors.dueDate.message}
                   </p>
                 )}
@@ -782,7 +783,7 @@ function InvoiceFormDialog({
                   )}
                 />
                 {errors.companyId && (
-                  <p className="text-sm text-red-500">
+                  <p className="text-sm text-destructive">
                     {errors.companyId.message}
                   </p>
                 )}
@@ -812,7 +813,7 @@ function InvoiceFormDialog({
                   )}
                 />
                 {errors.customerId && (
-                  <p className="text-sm text-red-500">
+                  <p className="text-sm text-destructive">
                     {errors.customerId.message}
                   </p>
                 )}
@@ -856,7 +857,7 @@ function InvoiceFormDialog({
               {errors.items &&
                 typeof errors.items === "object" &&
                 "message" in errors.items && (
-                  <p className="text-sm text-red-500">
+                  <p className="text-sm text-destructive">
                     {(errors.items as any).message}
                   </p>
                 )}
@@ -897,7 +898,7 @@ function InvoiceFormDialog({
                         )}
                       />
                       {errors.items?.[index]?.productId && (
-                        <p className="text-xs text-red-500 mt-1">
+                        <p className="text-xs text-destructive mt-1">
                           {errors.items[index]?.productId?.message}
                         </p>
                       )}
@@ -1003,7 +1004,7 @@ function InvoiceFormDialog({
                       <Percent className="absolute right-1.5 top-1.5 h-3 w-3 text-muted-foreground" />
                     </div>
                   </div>
-                  <span className="text-sm font-medium text-red-500 tabular-nums">
+                  <span className="text-sm font-medium text-destructive tabular-nums">
                     -{formatCurrency(discountValue)}
                   </span>
                 </div>
@@ -1024,7 +1025,7 @@ function InvoiceFormDialog({
                       <Percent className="absolute right-1.5 top-1.5 h-3 w-3 text-muted-foreground" />
                     </div>
                   </div>
-                  <span className="text-sm font-medium text-blue-500 tabular-nums">
+                  <span className="text-sm font-medium text-muted-foreground tabular-nums">
                     +{formatCurrency(taxValue)}
                   </span>
                 </div>
@@ -1124,7 +1125,7 @@ function DeleteInvoiceDialog({
           <AlertDialogAction
             onClick={handleDelete}
             disabled={deleteInvoice.isPending}
-            className="bg-red-600 hover:bg-red-700"
+            className="bg-destructive text-white hover:bg-destructive/90"
           >
             {deleteInvoice.isPending ? "Menghapus..." : "Hapus"}
           </AlertDialogAction>
@@ -1202,14 +1203,40 @@ function InvoiceDataTableUI() {
 
   const [globalFilter, setGlobalFilter] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState("all");
+  const [companyFilter, setCompanyFilter] = React.useState("all");
+  const [customerFilter, setCustomerFilter] = React.useState("all");
+  const [dateFrom, setDateFrom] = React.useState("");
+  const [dateTo, setDateTo] = React.useState("");
 
   const { data: rawInvoices, isLoading, refetch } = useGetInvoice();
+  const { data: rawCustomers } = UseGetCustomer();
+  const { data: rawCompanies } = useCompany();
 
   const invoices: InvoiceData[] = React.useMemo(() => {
     if (!rawInvoices) return [];
     if (Array.isArray(rawInvoices)) return rawInvoices;
     return (rawInvoices as any).invoices ?? [];
   }, [rawInvoices]);
+
+  const customers = React.useMemo<{ id: string; name: string }[]>(() => {
+    if (Array.isArray(rawCustomers)) return rawCustomers;
+    const data: unknown = rawCustomers;
+    if (data && typeof data === "object" && "customer" in data) {
+      const list = data.customer;
+      return Array.isArray(list) ? list : [];
+    }
+    return [];
+  }, [rawCustomers]);
+
+  const companies = React.useMemo<{ id: string; name: string }[]>(() => {
+    const data: unknown = rawCompanies;
+    if (Array.isArray(data)) return data;
+    if (data && typeof data === "object" && "companies" in data) {
+      const list = data.companies;
+      return Array.isArray(list) ? list : [];
+    }
+    return [];
+  }, [rawCompanies]);
 
   const handleSuccess = () => refetch();
 
@@ -1316,7 +1343,7 @@ function InvoiceDataTableUI() {
         const status: string = row.getValue("status");
         return (
           <span
-            className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_COLOR[status] ?? "bg-gray-100 text-gray-700"}`}
+            className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ${STATUS_COLOR[status] ?? "bg-muted text-muted-foreground"}`}
           >
             {status}
           </span>
@@ -1343,6 +1370,8 @@ function InvoiceDataTableUI() {
       cell: ({ row }) => (
         <div className="text-sm">{row.original.customer?.name ?? "-"}</div>
       ),
+      filterFn: (row, _, value) =>
+        !value || value === "all" || row.original.customerId === value,
     },
     {
       id: "company",
@@ -1369,6 +1398,8 @@ function InvoiceDataTableUI() {
           )}
         </div>
       ),
+      filterFn: (row, _, value) =>
+        !value || value === "all" || row.original.companyId === value,
     },
     {
       accessorKey: "issuedAt",
@@ -1390,6 +1421,19 @@ function InvoiceDataTableUI() {
           </div>
         </div>
       ),
+      filterFn: (row, _, value: { from?: string; to?: string }) => {
+        const issuedAt = new Date(row.original.issuedAt).getTime();
+        const start = value?.from
+          ? new Date(`${value.from}T00:00:00`).getTime()
+          : null;
+        const end = value?.to
+          ? new Date(`${value.to}T23:59:59.999`).getTime()
+          : null;
+        return (
+          (start === null || issuedAt >= start) &&
+          (end === null || issuedAt <= end)
+        );
+      },
     },
     {
       id: "totalAmount",
@@ -1486,7 +1530,7 @@ function InvoiceDataTableUI() {
                   setSelectedInvoice(inv);
                   setDeleteDialogOpen(true);
                 }}
-                className="text-red-600"
+                className="text-destructive"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
                 Hapus
@@ -1528,6 +1572,28 @@ function InvoiceDataTableUI() {
       table.getColumn("status")?.setFilterValue(undefined);
     }
   }, [statusFilter, table]);
+
+  const applyCompanyFilter = (value: string) => {
+    setCompanyFilter(value);
+    table
+      .getColumn("company")
+      ?.setFilterValue(value === "all" ? undefined : value);
+  };
+
+  const applyCustomerFilter = (value: string) => {
+    setCustomerFilter(value);
+    table
+      .getColumn("customer")
+      ?.setFilterValue(value === "all" ? undefined : value);
+  };
+
+  const applyDateFilter = (from: string, to: string) => {
+    setDateFrom(from);
+    setDateTo(to);
+    table
+      .getColumn("issuedAt")
+      ?.setFilterValue(from || to ? { from, to } : undefined);
+  };
 
   // Summary stats
   const totalRevenue = React.useMemo(
@@ -1584,13 +1650,74 @@ function InvoiceDataTableUI() {
               </SelectContent>
             </Select>
 
-            {(globalFilter || statusFilter !== "all") && (
+            <Select value={companyFilter} onValueChange={applyCompanyFilter}>
+              <SelectTrigger className="w-[170px]">
+                <SelectValue placeholder="Perusahaan" />
+              </SelectTrigger>
+              <SelectContent className="z-[9999] max-h-56 overflow-y-auto">
+                <SelectItem value="all">Semua Perusahaan</SelectItem>
+                {companies.map((company) => (
+                  <SelectItem key={company.id} value={company.id}>
+                    {company.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={customerFilter} onValueChange={applyCustomerFilter}>
+              <SelectTrigger className="w-[170px]">
+                <SelectValue placeholder="Pelanggan" />
+              </SelectTrigger>
+              <SelectContent className="z-[9999] max-h-56 overflow-y-auto">
+                <SelectItem value="all">Semua Pelanggan</SelectItem>
+                {customers.map((customer) => (
+                  <SelectItem key={customer.id} value={customer.id}>
+                    {customer.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <div className="flex items-center gap-1.5">
+              <Input
+                type="date"
+                aria-label="Dari tanggal"
+                className="h-9 w-[140px]"
+                value={dateFrom}
+                max={dateTo || undefined}
+                onChange={(event) =>
+                  applyDateFilter(event.target.value, dateTo)
+                }
+              />
+              <span className="text-xs text-muted-foreground">s/d</span>
+              <Input
+                type="date"
+                aria-label="Sampai tanggal"
+                className="h-9 w-[140px]"
+                value={dateTo}
+                min={dateFrom || undefined}
+                onChange={(event) =>
+                  applyDateFilter(dateFrom, event.target.value)
+                }
+              />
+            </div>
+
+            {(globalFilter ||
+              statusFilter !== "all" ||
+              companyFilter !== "all" ||
+              customerFilter !== "all" ||
+              dateFrom ||
+              dateTo) && (
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => {
                   setGlobalFilter("");
                   setStatusFilter("all");
+                  setCompanyFilter("all");
+                  setCustomerFilter("all");
+                  setDateFrom("");
+                  setDateTo("");
                   table.resetColumnFilters();
                 }}
               >
@@ -1767,7 +1894,7 @@ function InvoiceDataTableUI() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
           <div className="bg-card rounded-lg border p-4">
             <div className="flex items-center space-x-2">
-              <FileText className="h-5 w-5 text-blue-500" />
+              <FileText className="h-5 w-5 text-muted-foreground" />
               <h3 className="font-semibold">Total Invoice</h3>
             </div>
             <p className="text-2xl font-bold mt-2">{invoices.length}</p>
@@ -1780,7 +1907,7 @@ function InvoiceDataTableUI() {
 
           <div className="bg-card rounded-lg border p-4">
             <div className="flex items-center space-x-2">
-              <DollarSign className="h-5 w-5 text-green-500" />
+              <DollarSign className="h-5 w-5 text-muted-foreground" />
               <h3 className="font-semibold">Total Pendapatan</h3>
             </div>
             <p className="text-xl font-bold mt-2">
@@ -1842,6 +1969,9 @@ function InvoiceDataTableUI() {
 export default function InvoicePage() {
   const session = useSession();
 
+  if (session.isPending) {
+    return <Loading />;
+  }
   if (!session.data) {
     unauthorized();
   }

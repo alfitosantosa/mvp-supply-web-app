@@ -32,6 +32,17 @@ export type ProductRow = {
   invoices: number;
 };
 
+export type ClientProductRow = {
+  clientId: string;
+  clientName: string;
+  productId: string;
+  productName: string;
+  quantity: number;
+  revenue: number;
+  invoices: number;
+  lastOrder: string | null;
+};
+
 export type DashboardTotals = {
   revenue: number;
   invoices: number;
@@ -45,13 +56,23 @@ export type DashboardTotals = {
   bestMonth: MonthPoint | null;
 };
 
+export type FilterOption = {
+  id: string;
+  name: string;
+};
+
 export type DashboardData = {
   from: string;
   to: string;
   status: StatusFilter;
+  product: string;
+  client: string;
+  productOptions: FilterOption[];
+  clientOptions: FilterOption[];
   months: MonthPoint[];
   clients: ClientRow[];
   products: ProductRow[];
+  clientProducts: ClientProductRow[];
   totals: DashboardTotals;
 };
 
@@ -85,14 +106,18 @@ export async function getDashboardData(params: {
   from?: string;
   to?: string;
   status?: string;
+  product?: string;
+  client?: string;
 }): Promise<DashboardData> {
   const status = STATUS_FILTERS.includes(params.status as StatusFilter)
     ? (params.status as StatusFilter)
     : "ALL";
+  const product = params.product?.trim() || "ALL";
+  const client = params.client?.trim() || "ALL";
 
-  const latestYearRows = await prisma.$queryRawUnsafe<{ year: number | null }[]>(
-    `SELECT EXTRACT(YEAR FROM max("issuedAt"))::int AS year FROM invoices`,
-  );
+  const latestYearRows = await prisma.$queryRawUnsafe<
+    { year: number | null }[]
+  >(`SELECT EXTRACT(YEAR FROM max("issuedAt"))::int AS year FROM invoices`);
   const latestYear = latestYearRows[0]?.year ?? new Date().getFullYear();
   const defaultFrom = `${latestYear}-01-01`;
   const defaultTo = `${latestYear}-12-31`;
@@ -107,7 +132,8 @@ export async function getDashboardData(params: {
   // by accident.
   const [startDate, endDate] = from <= to ? [from, to] : [to, from];
 
-  const [monthlyRows, clientRows, productRows] = await Promise.all([
+  const [monthlyRows, clientRows, productRows, clientProductRows] =
+    await Promise.all([
     prisma.$queryRawUnsafe<RawMonth[]>(
       `SELECT to_char(date_trunc('month', i."issuedAt"), 'YYYY-MM') AS month,
               count(*)::int AS invoices,
@@ -121,11 +147,18 @@ export async function getDashboardData(params: {
        ) items ON true
        WHERE i."issuedAt" >= $1::date AND i."issuedAt" < ($2::date + 1)
          AND ($3 = 'ALL' OR i.status = $3)
+         AND ($4 = 'ALL' OR EXISTS (
+           SELECT 1 FROM invoice_items fii
+           WHERE fii."invoiceId" = i.id AND fii."productId" = $4
+         ))
+         AND ($5 = 'ALL' OR i."customerId" = $5)
        GROUP BY 1
        ORDER BY 1`,
       startDate,
       endDate,
       status,
+      product,
+      client,
     ),
     prisma.$queryRawUnsafe<RawClient[]>(
       `SELECT c.id,
@@ -143,11 +176,18 @@ export async function getDashboardData(params: {
          FROM invoice_items ii
          WHERE ii."invoiceId" = i.id
        ) items ON true
+       WHERE ($4 = 'ALL' OR EXISTS (
+           SELECT 1 FROM invoice_items fii
+           WHERE fii."invoiceId" = i.id AND fii."productId" = $4
+         ))
+         AND ($5 = 'ALL' OR c.id = $5)
        GROUP BY c.id, c.name
        ORDER BY revenue DESC, c.name`,
       startDate,
       endDate,
       status,
+      product,
+      client,
     ),
     prisma.$queryRawUnsafe<RawProduct[]>(
       `SELECT p.id,
@@ -160,12 +200,52 @@ export async function getDashboardData(params: {
        JOIN products p ON p.id = ii."productId"
        WHERE i."issuedAt" >= $1::date AND i."issuedAt" < ($2::date + 1)
          AND ($3 = 'ALL' OR i.status = $3)
+         AND ($4 = 'ALL' OR ii."productId" = $4)
+         AND ($5 = 'ALL' OR i."customerId" = $5)
        GROUP BY p.id, p.name
        ORDER BY revenue DESC`,
       startDate,
       endDate,
       status,
+      product,
+      client,
     ),
+    prisma.$queryRawUnsafe<ClientProductRow[]>(
+      `SELECT c.id AS "clientId",
+              c.name AS "clientName",
+              p.id AS "productId",
+              p.name AS "productName",
+              sum(ii.quantity)::int AS quantity,
+              sum(ii.total)::float8 AS revenue,
+              count(DISTINCT ii."invoiceId")::int AS invoices,
+              to_char(max(i."issuedAt"), 'YYYY-MM-DD') AS "lastOrder"
+       FROM invoice_items ii
+       JOIN invoices i ON i.id = ii."invoiceId"
+       JOIN products p ON p.id = ii."productId"
+       JOIN "Customer" c ON c.id = i."customerId"
+       WHERE i."issuedAt" >= $1::date AND i."issuedAt" < ($2::date + 1)
+         AND ($3 = 'ALL' OR i.status = $3)
+         AND ($4 = 'ALL' OR ii."productId" = $4)
+         AND ($5 = 'ALL' OR i."customerId" = $5)
+       GROUP BY c.id, c.name, p.id, p.name
+       ORDER BY c.name, revenue DESC`,
+      startDate,
+      endDate,
+      status,
+      product,
+      client,
+    ),
+  ]);
+
+  const [productOptions, clientOptions] = await Promise.all([
+    prisma.product.findMany({
+      select: { id: true, name: true },
+      orderBy: { name: "asc" },
+    }),
+    prisma.customer.findMany({
+      select: { id: true, name: true },
+      orderBy: { name: "asc" },
+    }),
   ]);
 
   const byMonth = new Map(monthlyRows.map((row) => [row.month, row]));
@@ -224,9 +304,14 @@ export async function getDashboardData(params: {
     from: startDate,
     to: endDate,
     status,
+    product,
+    client,
+    productOptions,
+    clientOptions,
     months,
     clients,
     products: productRows,
+    clientProducts: clientProductRows,
     totals: {
       revenue,
       invoices,

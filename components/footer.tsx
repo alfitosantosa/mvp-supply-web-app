@@ -1,11 +1,9 @@
 export async function Footer() {
   return (
-    <footer className="w-full bg-black text-white p-4 mt-8">
-      <div className="container mx-auto text-center">
-        <p>
-          &copy; {new Date().getFullYear()} MVP Supply. All rights reserved.
-        </p>
-      </div>
+    <footer className="w-full border-t px-4 py-6 md:px-6">
+      <p className="mx-auto max-w-7xl text-xs text-muted-foreground">
+        &copy; {new Date().getFullYear()} MVP Supply. All rights reserved.
+      </p>
     </footer>
   );
 }

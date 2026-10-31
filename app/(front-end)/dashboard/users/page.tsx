@@ -118,14 +118,17 @@ function getInitials(name: string) {
 
 function RoleBadge({ role }: { role?: string }) {
   const cfg: Record<string, { label: string; className: string }> = {
-    admin: { label: "Admin", className: "bg-purple-600 text-white" },
-    user: { label: "User", className: "bg-blue-500 text-white" },
-    bendahara: { label: "Bendahara", className: "bg-orange-500 text-white" },
+    admin: { label: "Admin", className: "bg-primary text-primary-foreground" },
+    user: { label: "User", className: "bg-muted text-foreground" },
+    bendahara: {
+      label: "Bendahara",
+      className: "border border-border text-foreground",
+    },
   };
   const r = (role ?? "user").toLowerCase();
   const { label, className } = cfg[r] ?? {
     label: role ?? "User",
-    className: "bg-gray-500 text-white",
+    className: "bg-muted text-muted-foreground",
   };
   return <Badge className={`${className} text-xs`}>{label}</Badge>;
 }
@@ -214,17 +217,17 @@ function EditUserDialog({
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">
-              Nama <span className="text-red-500">*</span>
+              Nama <span className="text-destructive">*</span>
             </Label>
             <Input id="name" placeholder="Nama lengkap" {...register("name")} />
             {errors.name && (
-              <p className="text-sm text-red-500">{errors.name.message}</p>
+              <p className="text-sm text-destructive">{errors.name.message}</p>
             )}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="email">
-              Email <span className="text-red-500">*</span>
+              Email <span className="text-destructive">*</span>
             </Label>
             <Input
               id="email"
@@ -233,7 +236,7 @@ function EditUserDialog({
               {...register("email")}
             />
             {errors.email && (
-              <p className="text-sm text-red-500">{errors.email.message}</p>
+              <p className="text-sm text-destructive">{errors.email.message}</p>
             )}
           </div>
 
@@ -394,12 +397,12 @@ function BetterAuthUserDataTable() {
       cell: ({ row }) => {
         const active = row.getValue("isActive") as boolean;
         return active ? (
-          <Badge className="bg-green-600 text-white flex items-center gap-1 w-fit">
+          <Badge className="flex w-fit items-center gap-1 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400">
             <UserCheck className="h-3 w-3" />
             Aktif
           </Badge>
         ) : (
-          <Badge className="bg-gray-400 text-white flex items-center gap-1 w-fit">
+          <Badge className="flex w-fit items-center gap-1 bg-muted text-muted-foreground">
             <UserX className="h-3 w-3" />
             Nonaktif
           </Badge>
@@ -877,7 +880,7 @@ function BetterAuthUserDataTable() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
         <div className="bg-card rounded-lg border p-4">
           <div className="flex items-center space-x-2">
-            <Users className="h-5 w-5 text-blue-500" />
+            <Users className="h-5 w-5 text-muted-foreground" />
             <h3 className="font-semibold">Total User</h3>
           </div>
           <p className="text-2xl font-bold mt-2">{totalUsers}</p>
@@ -890,7 +893,7 @@ function BetterAuthUserDataTable() {
 
         <div className="bg-card rounded-lg border p-4">
           <div className="flex items-center space-x-2">
-            <UserCheck className="h-5 w-5 text-green-600" />
+            <UserCheck className="h-5 w-5 text-muted-foreground" />
             <h3 className="font-semibold">Aktif</h3>
           </div>
           <p className="text-2xl font-bold mt-2">{activeCount}</p>
@@ -902,7 +905,7 @@ function BetterAuthUserDataTable() {
 
         <div className="bg-card rounded-lg border p-4">
           <div className="flex items-center space-x-2">
-            <ShieldCheck className="h-5 w-5 text-blue-500" />
+            <ShieldCheck className="h-5 w-5 text-muted-foreground" />
             <h3 className="font-semibold">Email Verified</h3>
           </div>
           <p className="text-2xl font-bold mt-2">{verifiedCount}</p>
@@ -916,7 +919,7 @@ function BetterAuthUserDataTable() {
 
         <div className="bg-card rounded-lg border p-4">
           <div className="flex items-center space-x-2">
-            <ShieldOff className="h-5 w-5 text-red-500" />
+            <ShieldOff className="h-5 w-5 text-destructive" />
             <h3 className="font-semibold">Dibanned</h3>
           </div>
           <p className="text-2xl font-bold mt-2">{bannedCount}</p>
@@ -924,7 +927,7 @@ function BetterAuthUserDataTable() {
             <Button
               variant="link"
               size="sm"
-              className="p-0 h-auto text-xs text-red-500 mt-1"
+              className="p-0 h-auto text-xs text-destructive mt-1"
               onClick={() => setBannedFilter("banned")}
             >
               Lihat semua →

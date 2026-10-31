@@ -250,7 +250,7 @@ function AvatarUpload({
                 height={20}
                 className="w-24 h-24 rounded-full object-cover border-2"
               />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="absolute inset-0 flex items-center justify-center bg-foreground/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                 <Button
                   type="button"
                   size="sm"
@@ -424,7 +424,7 @@ function ProductFormDialog({
             disabled={isPending}
           />
           {errors.imageUrl && (
-            <p className="text-sm text-red-500">{errors.imageUrl.message}</p>
+            <p className="text-sm text-destructive">{errors.imageUrl.message}</p>
           )}
           <div className="space-y-2">
             <Label htmlFor="name">Nama Produk</Label>
@@ -434,7 +434,7 @@ function ProductFormDialog({
               {...register("name")}
             />
             {errors.name && (
-              <p className="text-sm text-red-500">{errors.name.message}</p>
+              <p className="text-sm text-destructive">{errors.name.message}</p>
             )}
           </div>
 
@@ -449,7 +449,7 @@ function ProductFormDialog({
                 {...register("price")}
               />
               {errors.price && (
-                <p className="text-sm text-red-500">{errors.price.message}</p>
+                <p className="text-sm text-destructive">{errors.price.message}</p>
               )}
             </div>
             <div className="space-y-2">
@@ -462,7 +462,7 @@ function ProductFormDialog({
                 {...register("stock")}
               />
               {errors.stock && (
-                <p className="text-sm text-red-500">{errors.stock.message}</p>
+                <p className="text-sm text-destructive">{errors.stock.message}</p>
               )}
             </div>
           </div>
@@ -535,7 +535,7 @@ function DeleteProductDialog({
           <AlertDialogAction
             onClick={handleDelete}
             disabled={deleteProduct.isPending}
-            className="bg-red-600 hover:bg-red-700"
+            className="bg-destructive text-white hover:bg-destructive/90"
           >
             {deleteProduct.isPending ? "Menghapus..." : "Hapus"}
           </AlertDialogAction>
@@ -690,7 +690,7 @@ function ProductDataTableUI() {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="font-mono text-green-700 dark:text-green-400">
+        <div className="font-mono text-foreground">
           {formatCurrency(row.getValue("total"))}
         </div>
       ),
@@ -739,7 +739,7 @@ function ProductDataTableUI() {
                   setSelectedProduct(product);
                   setDeleteDialogOpen(true);
                 }}
-                className="text-red-600"
+                className="text-destructive"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
                 Hapus
@@ -798,7 +798,7 @@ function ProductDataTableUI() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div className="bg-card rounded-lg border p-4">
           <div className="flex items-center space-x-2">
-            <Package className="h-5 w-5 text-blue-500" />
+            <Package className="h-5 w-5 text-muted-foreground" />
             <h3 className="font-semibold">Total Produk</h3>
           </div>
           <p className="text-2xl font-bold mt-2">{products.length}</p>
@@ -811,10 +811,10 @@ function ProductDataTableUI() {
 
         <div className="bg-card rounded-lg border p-4">
           <div className="flex items-center space-x-2">
-            <TrendingUp className="h-5 w-5 text-green-500" />
+            <TrendingUp className="h-5 w-5 text-muted-foreground" />
             <h3 className="font-semibold">Total Nilai Stok</h3>
           </div>
-          <p className="text-2xl font-bold mt-2 text-green-600">
+          <p className="text-2xl font-bold mt-2 text-foreground">
             {formatCurrency(totalValue)}
           </p>
         </div>
@@ -830,10 +830,10 @@ function ProductDataTableUI() {
 
         <div className="bg-card rounded-lg border p-4">
           <div className="flex items-center space-x-2">
-            <Package className="h-5 w-5 text-red-500" />
+            <Package className="h-5 w-5 text-destructive" />
             <h3 className="font-semibold">Stok Habis</h3>
           </div>
-          <p className="text-2xl font-bold mt-2 text-red-600">{outOfStock}</p>
+          <p className="text-2xl font-bold mt-2 text-destructive">{outOfStock}</p>
           <p className="text-sm text-muted-foreground">produk tidak tersedia</p>
         </div>
       </div>

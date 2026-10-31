@@ -44,12 +44,12 @@ export default function SignUp() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 flex-col">
+    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-muted/40 px-4 py-12">
       <Card className="w-full max-w-md mx-4">
         <CardHeader>
-          <CardTitle className="text-lg md:text-xl">Sign Up</CardTitle>
+          <CardTitle className="text-2xl tracking-tight">Buat akun</CardTitle>
           <CardDescription className="text-xs md:text-sm">
-            Enter your information to create an account
+            Isi data berikut untuk mendaftar. Akun bisa dipakai setelah disetujui admin.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -170,7 +170,7 @@ export default function SignUp() {
                       toast.error(ctx.error.message);
                     },
                     onSuccess: async () => {
-                      router.push("/dashboard");
+                      router.push("/");
                     },
                   },
                 });
@@ -179,7 +179,7 @@ export default function SignUp() {
               {loading ? (
                 <Loader2 size={16} className="animate-spin" />
               ) : (
-                "Create an account"
+                "Buat akun"
               )}
             </Button>
             <Button
@@ -216,13 +216,13 @@ export default function SignUp() {
                   d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0C79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
                 ></path>
               </svg>
-              Sign in with Google
+              Masuk dengan Google
             </Button>
           </div>
         </CardContent>
         <CardFooter>
           <div className="flex justify-center w-full border-t py-4">
-            <p className="text-center text-xs text-neutral-500">
+            <p className="text-center text-xs text-muted-foreground">
               Sudah punya akun?{" "}
               <Link href="/auth/sign-in" className="underline">
                 Masuk

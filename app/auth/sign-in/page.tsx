@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
-import { Loader2, Key } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { signIn } from "@/lib/auth-client";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -25,12 +25,12 @@ export default function SignIn() {
   const [rememberMe, setRememberMe] = useState(false);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 flex-col">
+    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-muted/40 px-4 py-12">
       <Card className="w-full max-w-md mx-4">
         <CardHeader>
-          <CardTitle className="text-lg md:text-xl">Sign In</CardTitle>
+          <CardTitle className="text-2xl tracking-tight">Masuk</CardTitle>
           <CardDescription className="text-xs md:text-sm">
-            Enter your email below to login to your account
+            Masuk untuk membuka dashboard MVP Supply.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -93,10 +93,10 @@ export default function SignIn() {
                   },
 
                   {
-                    onRequest: (ctx) => {
+                    onRequest: () => {
                       setLoading(true);
                     },
-                    onResponse: (ctx) => {
+                    onResponse: () => {
                       setLoading(false);
                     },
                   },
@@ -106,7 +106,7 @@ export default function SignIn() {
               {loading ? (
                 <Loader2 size={16} className="animate-spin" />
               ) : (
-                <p> Login </p>
+                <p>Masuk</p>
               )}
             </Button>
 
@@ -150,34 +150,17 @@ export default function SignIn() {
                     d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0C79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
                   ></path>
                 </svg>
-                Sign in with Google
+                Masuk dengan Google
               </Button>
             </div>
           </div>
         </CardContent>
         <CardFooter>
-          <div className="flex flex-col w-full gap-4 text-sm dark:text-white/70 cursor-pointer">
-            <div>
-              Sudah punya akun belum?{" "}
-              <Link href="/auth/sign-up" className="underline">
-                Daftar
-              </Link>
-            </div>
-
-            <div className="flex justify-center w-full border-t py-4">
-              <p className="text-center text-xs text-neutral-500">
-                built with{" "}
-                <Link
-                  href="https://better-auth.com"
-                  className="underline"
-                  target="_blank"
-                >
-                  <span className="dark:text-white/70 cursor-pointer">
-                    better-auth.
-                  </span>
-                </Link>
-              </p>
-            </div>
+          <div className="w-full text-sm">
+            Belum punya akun?{" "}
+            <Link href="/auth/sign-up" className="font-medium underline underline-offset-4">
+              Daftar
+            </Link>
           </div>
         </CardFooter>
       </Card>

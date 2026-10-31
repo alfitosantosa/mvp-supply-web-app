@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const TITLES: Record<string, string> = {
   "/": "Dashboard",
@@ -24,6 +25,9 @@ export function SiteHeader() {
       <h1 className="text-sm font-medium">
         {TITLES[pathname] ?? "Dashboard"}
       </h1>
+      <div className="ml-auto">
+        <ThemeToggle />
+      </div>
     </header>
   );
 }

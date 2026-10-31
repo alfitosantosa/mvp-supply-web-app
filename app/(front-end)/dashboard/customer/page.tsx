@@ -221,7 +221,7 @@ function AvatarUpload({
                 height={96}
                 className="w-24 h-24 rounded-full object-cover border-2"
               />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="absolute inset-0 flex items-center justify-center bg-foreground/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
                 <Button
                   type="button"
                   size="sm"
@@ -405,7 +405,7 @@ function CustomerFormDialog({
               {...register("name")}
             />
             {errors.name && (
-              <p className="text-sm text-red-500">{errors.name.message}</p>
+              <p className="text-sm text-destructive">{errors.name.message}</p>
             )}
           </div>
 
@@ -417,7 +417,7 @@ function CustomerFormDialog({
               {...register("phone")}
             />
             {errors.phone && (
-              <p className="text-sm text-red-500">{errors.phone.message}</p>
+              <p className="text-sm text-destructive">{errors.phone.message}</p>
             )}
           </div>
 
@@ -429,7 +429,7 @@ function CustomerFormDialog({
               {...register("address")}
             />
             {errors.address && (
-              <p className="text-sm text-red-500">{errors.address.message}</p>
+              <p className="text-sm text-destructive">{errors.address.message}</p>
             )}
           </div>
 
@@ -442,7 +442,7 @@ function CustomerFormDialog({
               disabled={isPending}
             />
             {errors.imageUrl && (
-              <p className="text-sm text-red-500">{errors.imageUrl.message}</p>
+              <p className="text-sm text-destructive">{errors.imageUrl.message}</p>
             )}
           </div>
 
@@ -505,7 +505,7 @@ function DeleteCustomerDialog({
           <AlertDialogAction
             onClick={handleDelete}
             disabled={deleteCustomer.isPending}
-            className="bg-red-600 hover:bg-red-700"
+            className="bg-destructive text-white hover:bg-destructive/90"
           >
             {deleteCustomer.isPending ? "Menghapus..." : "Hapus"}
           </AlertDialogAction>
@@ -726,7 +726,7 @@ function CustomerDataTableUI() {
                   setSelectedCustomer(customer);
                   setDeleteDialogOpen(true);
                 }}
-                className="text-red-600"
+                className="text-destructive"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
                 Hapus
@@ -968,7 +968,7 @@ function CustomerDataTableUI() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
           <div className="bg-card rounded-lg border p-4">
             <div className="flex items-center space-x-2">
-              <Users className="h-5 w-5 text-blue-500" />
+              <Users className="h-5 w-5 text-muted-foreground" />
               <h3 className="font-semibold">Total Pelanggan</h3>
             </div>
             <p className="text-2xl font-bold mt-2">{customers.length}</p>
@@ -981,7 +981,7 @@ function CustomerDataTableUI() {
 
           <div className="bg-card rounded-lg border p-4">
             <div className="flex items-center space-x-2">
-              <ImageIcon className="h-5 w-5 text-green-500" />
+              <ImageIcon className="h-5 w-5 text-muted-foreground" />
               <h3 className="font-semibold">Punya Foto</h3>
             </div>
             <p className="text-2xl font-bold mt-2">
