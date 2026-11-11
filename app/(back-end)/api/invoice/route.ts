@@ -56,11 +56,13 @@
 // }
 
 import prisma from "@/lib/prisma";
+import { revalidateTag, unstable_cache } from "next/cache";
 import { NextRequest } from "next/server";
+import { DB_CACHE_TAG } from "@/lib/cache";
 
-export async function GET() {
-  try {
-    const getInvoice = await prisma.invoice.findMany({
+const getInvoices = unstable_cache(
+  () =>
+    prisma.invoice.findMany({
       include: {
         items: {
           include: {
@@ -75,12 +77,17 @@ export async function GET() {
           },
         },
       },
-    });
+    }),
+  ["invoices"],
+  { revalidate: 300, tags: [DB_CACHE_TAG] },
+);
+
+export async function GET() {
+  try {
+    const getInvoice = await getInvoices();
     return new Response(JSON.stringify(getInvoice));
   } catch (error) {
     return new Response(`Failed to fetch ${error}`);
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -119,11 +126,10 @@ export async function POST(request: NextRequest) {
         status,
       },
     });
+    revalidateTag(DB_CACHE_TAG, { expire: 0 });
     return new Response(JSON.stringify(createInvoice));
   } catch (error) {
     return new Response(`Failed to create ${error}`);
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -163,11 +169,10 @@ export async function PUT(request: NextRequest) {
         status,
       },
     });
+    revalidateTag(DB_CACHE_TAG, { expire: 0 });
     return new Response(JSON.stringify(createInvoice));
   } catch (Error) {
     return new Response(`Failed to update ${Error}`);
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -179,10 +184,9 @@ export async function DELETE(request: NextRequest) {
         id,
       },
     });
+    revalidateTag(DB_CACHE_TAG, { expire: 0 });
     return new Response(JSON.stringify(deleteInvoice));
   } catch (error) {
     return new Response(`Failed to delete ${error}`);
-  } finally {
-    await prisma.$disconnect();
   }
 }

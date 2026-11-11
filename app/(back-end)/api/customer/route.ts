@@ -9,17 +9,23 @@
 //   invoices invoice[]
 
 import prisma from "@/lib/prisma";
+import { revalidateTag, unstable_cache } from "next/cache";
 import { NextRequest } from "next/server";
+import { DB_CACHE_TAG } from "@/lib/cache";
+
+const getCustomers = unstable_cache(
+  () => prisma.customer.findMany(),
+  ["customers"],
+  { revalidate: 300, tags: [DB_CACHE_TAG] },
+);
 
 export async function GET() {
   try {
-    const customer = await prisma.customer.findMany();
+    const customer = await getCustomers();
     return Response.json({ customer });
   } catch (error) {
     console.error("Error fetching product:", error);
     return Response.json({ error: "Failed to fetch product" });
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -34,12 +40,11 @@ export async function POST(request: NextRequest) {
         phone,
       },
     });
+    revalidateTag(DB_CACHE_TAG, { expire: 0 });
     return Response.json({ createCustomer });
   } catch (error) {
     console.error("Error creating customer:", error);
     return Response.json({ error: "Failed to create customer" });
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -56,12 +61,11 @@ export async function PUT(reuquest: NextRequest) {
         phone,
       },
     });
+    revalidateTag(DB_CACHE_TAG, { expire: 0 });
     return Response.json({ updateCustomer });
   } catch (error) {
     console.error("Error updating customer:", error);
     return Response.json({ error: "Failed to update customer" });
-  } finally {
-    await prisma.$disconnect();
   }
 }
 
@@ -71,11 +75,10 @@ export async function DELETE(request: NextRequest) {
     const deleteCustomer = await prisma.customer.delete({
       where: { id },
     });
+    revalidateTag(DB_CACHE_TAG, { expire: 0 });
     return Response.json({ deleteCustomer });
   } catch (error) {
     console.error("Error deleting customer:", error);
     return Response.json({ error: "Failed to delete customer" });
-  } finally {
-    await prisma.$disconnect();
   }
 }

@@ -1,5 +1,13 @@
 import prisma from "@/lib/prisma";
+import { unstable_cache } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
+import { DB_CACHE_TAG } from "@/lib/cache";
+
+const getUserById = unstable_cache(
+  (id: string) => prisma.user.findMany({ where: { id } }),
+  ["user"],
+  { revalidate: 300, tags: [DB_CACHE_TAG] },
+);
 
 //get user by id
 export async function GET(
@@ -8,9 +16,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const users = await prisma.user.findMany({
-      where: { id },
-    });
+    const users = await getUserById(id);
     return NextResponse.json(users);
   } catch (error) {
     console.error("Error fetching users:", error);

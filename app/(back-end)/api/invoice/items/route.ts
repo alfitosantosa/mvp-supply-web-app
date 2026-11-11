@@ -16,15 +16,24 @@
 // }
 
 import prisma from "@/lib/prisma";
+import { revalidateTag, unstable_cache } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
+import { DB_CACHE_TAG } from "@/lib/cache";
+
+const getInvoiceItems = unstable_cache(
+  () =>
+    prisma.invoiceItem.findMany({
+      include: {
+        product: true,
+        invoice: true,
+      },
+    }),
+  ["invoice-items"],
+  { revalidate: 300, tags: [DB_CACHE_TAG] },
+);
 
 export async function GET() {
-  const invoiceItems = await prisma.invoiceItem.findMany({
-    include: {
-      product: true,
-      invoice: true,
-    },
-  });
+  const invoiceItems = await getInvoiceItems();
   return Response.json(invoiceItems);
 }
 
@@ -37,6 +46,7 @@ export async function POST(request: NextRequest) {
     data: invoiceItems.map(({ productName, ...item }: any) => item),
   });
 
+  revalidateTag(DB_CACHE_TAG, { expire: 0 });
   return NextResponse.json(CreateInvoiceItems);
 }
 
@@ -49,6 +59,7 @@ export async function PUT(request: NextRequest) {
     data: invoiceItems,
   });
 
+  revalidateTag(DB_CACHE_TAG, { expire: 0 });
   return NextResponse.json(UpdateInvoiceItems);
 }
 
@@ -64,5 +75,6 @@ export async function DELETE(request: NextRequest) {
     },
   });
 
+  revalidateTag(DB_CACHE_TAG, { expire: 0 });
   return NextResponse.json(DeleteInvoiceItems);
 }

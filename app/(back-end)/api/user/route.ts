@@ -18,12 +18,21 @@
 //   @@map("user")
 // }
 
+import { revalidateTag, unstable_cache } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { DB_CACHE_TAG } from "@/lib/cache";
+
+const getUsers = unstable_cache(() => prisma.user.findMany(), ["users"], {
+  // Shorter than the rest: sign-ups arrive through /api/auth, not through a
+  // route that purges DB_CACHE_TAG.
+  revalidate: 60,
+  tags: [DB_CACHE_TAG],
+});
 
 export async function GET() {
   try {
-    const users = await prisma.user.findMany();
+    const users = await getUsers();
     return NextResponse.json(users);
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -41,6 +50,7 @@ export async function PUT(request: NextRequest) {
       where: { id },
       data: { name, email, isActive },
     });
+    revalidateTag(DB_CACHE_TAG, { expire: 0 });
     return NextResponse.json(updateUser);
   } catch (error) {
     console.error("Error updating user:", error);

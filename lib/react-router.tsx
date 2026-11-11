@@ -17,8 +17,8 @@ export function ReactQueryProvider({ children }: { children: ReactNode }) {
             retry: 2,
             // Don't refetch on window focus in production
             refetchOnWindowFocus: false,
-            // Don't refetch on mount if data is fresh
-            refetchOnMount: false,
+            // Stale data refreshes on mount; the server data cache absorbs the
+            // read so this stays free for Neon.
           },
           mutations: {
             // Retry mutations once

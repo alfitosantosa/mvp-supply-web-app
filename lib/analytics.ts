@@ -1,4 +1,6 @@
 import prisma from "@/lib/prisma";
+import { unstable_cache } from "next/cache";
+import { DB_CACHE_TAG } from "@/lib/cache";
 import { monthLabel } from "@/lib/format";
 
 export const STATUS_FILTERS = ["ALL", "PAID", "SENT", "DRAFT"] as const;
@@ -102,13 +104,17 @@ type RawProduct = {
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
-export async function getDashboardData(params: {
+type DashboardParams = {
   from?: string;
   to?: string;
   status?: string;
   product?: string;
   client?: string;
-}): Promise<DashboardData> {
+};
+
+const loadDashboardData = async (
+  params: DashboardParams,
+): Promise<DashboardData> => {
   const status = STATUS_FILTERS.includes(params.status as StatusFilter)
     ? (params.status as StatusFilter)
     : "ALL";
@@ -335,4 +341,23 @@ export async function getDashboardData(params: {
           : null,
     },
   };
+};
+
+const cachedDashboardData = unstable_cache(loadDashboardData, ["dashboard"], {
+  revalidate: 300,
+  tags: [DB_CACHE_TAG],
+});
+
+/**
+ * Cache key is the normalized filter values, never the raw `searchParams`
+ * object: its key order changes per request and would miss every time.
+ */
+export function getDashboardData(params: DashboardParams) {
+  return cachedDashboardData({
+    from: params.from ?? "",
+    to: params.to ?? "",
+    status: params.status ?? "",
+    product: params.product ?? "",
+    client: params.client ?? "",
+  });
 }

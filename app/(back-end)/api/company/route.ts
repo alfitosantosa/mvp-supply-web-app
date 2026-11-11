@@ -13,11 +13,18 @@
 // }
 
 import prisma from "@/lib/prisma";
+import { revalidateTag, unstable_cache } from "next/cache";
 import { NextRequest } from "next/server";
+import { DB_CACHE_TAG } from "@/lib/cache";
+
+const getCompanies = unstable_cache(() => prisma.company.findMany(), ["companies"], {
+  revalidate: 300,
+  tags: [DB_CACHE_TAG],
+});
 
 export async function GET() {
   try {
-    const GetInvoice = await prisma.company.findMany();
+    const GetInvoice = await getCompanies();
     return Response.json(GetInvoice);
   } catch (error) {
     return Response.json(error);
@@ -50,6 +57,7 @@ export async function POST(request: NextRequest) {
         senderTitle,
       },
     });
+    revalidateTag(DB_CACHE_TAG, { expire: 0 });
     return Response.json(createCompany);
   } catch (error) {
     return Response.json(error);
@@ -85,6 +93,7 @@ export async function PUT(request: NextRequest) {
         senderTitle,
       },
     });
+    revalidateTag(DB_CACHE_TAG, { expire: 0 });
     return Response.json(updateCompany);
   } catch (error) {
     return Response.json(error);
@@ -98,6 +107,7 @@ export async function DELETE(request: NextRequest) {
     const DeleteCompany = await prisma.company.delete({
       where: { id },
     });
+    revalidateTag(DB_CACHE_TAG, { expire: 0 });
     return Response.json(DeleteCompany);
   } catch (error) {
     return Response.json(error);
